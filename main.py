@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 import time
 
 # URL france events
@@ -18,15 +19,25 @@ driver.get(url)
 driver.maximize_window()
 btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
 driver.execute_script("arguments[0].click();", btn)
-# driver.close()
 
 
-# grabbing all countries and storing in list
+# grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
 countries = []
 
-country_scrap = driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/div[2]/div/section/table/tbody/tr[2]/td[1]/a').get_attribute('href')
-countries.append(country_scrap)
-print(countries)
+time.sleep(7)
+drop_down = driver.find_element_by_xpath('//*[@id="country"]')
+
+options = [x for x in drop_down.find_elements_by_tag_name("option")]
+
+for element in options:
+    countries.append(element.get_attribute("value"))
+
+driver.close()
+
+
+
+
+print(len(countries))
 
 
 
