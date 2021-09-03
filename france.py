@@ -15,8 +15,11 @@ PATH = '../../drivers/chromedriver'
 driver = webdriver.Chrome(PATH) 
 driver.get(url) 
 
-
-
+# Scroll works but not completly as of yet.
+ScrollNumber = 50
+for i in range(1, ScrollNumber):
+    driver.execute_script('window.scrollTo(1,50000)')
+    time.sleep(5)
 
 # grabbing all event href and storing in list to iterate through, each page
 events_france = []
@@ -31,7 +34,7 @@ for eve in event:
 driver.close()
 
 
-
+# Next step figure out a proper data structure (Dictionary (key = event name) with list of information as value?), or convert into csv instead?
 
 print(events_france)
 
