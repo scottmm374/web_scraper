@@ -25,7 +25,7 @@ driver.get(url)
 
 # Issues with Exceptions thrown on button click (known issue with Chrome driver), so used this code to reach and activate button. 
 driver.maximize_window()
-time.sleep(5)
+time.sleep(7)
 
 
 # Login
@@ -38,7 +38,7 @@ else:
     print('Cant find Login')
     driver.quit()
 
-time.sleep(5)
+time.sleep(8)
 
 login_email = driver.find_element_by_xpath('//*[@id="valEmail"]')
 time.sleep(5)
@@ -91,44 +91,31 @@ else:
     driver.quit()
 # driver.quit()
 
-print('We reached the end')
+# print('We reached the end')
+
+time.sleep(10)
+
+btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
+driver.execute_script("arguments[0].click();", btn)
+
+
+# grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
+countries = []
+
+time.sleep(7)
+drop_down = driver.find_element_by_xpath('//*[@id="country"]')
+
+options = [x for x in drop_down.find_elements_by_tag_name("option")]
+
+for element in options:
+    countries.append(element.get_attribute("value"))
+
+driver.close()
 
 
 
-# btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
-# driver.execute_script("arguments[0].click();", btn)
 
+print(countries)
 
-# # grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
-# countries = []
+driver.quit()
 
-# time.sleep(7)
-# drop_down = driver.find_element_by_xpath('//*[@id="country"]')
-
-# options = [x for x in drop_down.find_elements_by_tag_name("option")]
-
-# for element in options:
-#     countries.append(element.get_attribute("value"))
-
-# driver.close()
-
-
-
-
-# print(countries)
-
-
-#  Error after login and entering email.. checkbox
-# Traceback (most recent call last):
-#   File "/Users/michellescott/Documents/github/iearn/tentimes-scraper/main.py", line 31, in <module>
-#     check_box = driver.find_element_by_xpath('//*[@id="i2"]').click()
-#   File "/Users/michellescott/.local/share/virtualenvs/webscrape-vQ_GJror/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 80, in click
-#     self._execute(Command.CLICK_ELEMENT)
-#   File "/Users/michellescott/.local/share/virtualenvs/webscrape-vQ_GJror/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 633, in _execute
-#     return self._parent.execute(command, params)
-#   File "/Users/michellescott/.local/share/virtualenvs/webscrape-vQ_GJror/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 321, in execute
-#     self.error_handler.check_response(response)
-#   File "/Users/michellescott/.local/share/virtualenvs/webscrape-vQ_GJror/lib/python3.9/site-packages/selenium/webdriver/remote/errorhandler.py", line 242, in check_response
-#     raise exception_class(message, screen, stacktrace)
-# selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
-#   (Session info: chrome=92.0.4515.159)
