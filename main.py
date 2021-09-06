@@ -5,13 +5,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import time
 import env
-
+import random
 # chrome options
 chrome_options = Options()
 # chrome_options.add_argument('--headless')
 chrome_options.add_argument('start-maximized')
 chrome_options.add_argument('--disable-notifications')
 
+x = random.randint(4,20)
 # URL france events
 url = "https://10times.com"
 
@@ -29,74 +30,87 @@ time.sleep(7)
 
 
 # Login
-login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
+# login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
+try:
+    login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
 
-if(login_link):
     print('found login')
     driver.execute_script("arguments[0].click();", login_link)
-else:
+except:
     print('Cant find Login')
+    driver.close()
     driver.quit()
 
-time.sleep(8)
+time.sleep(x)
 
-login_email = driver.find_element_by_xpath('//*[@id="valEmail"]')
-time.sleep(5)
-if(login_email):
+
+try:
+    login_email = driver.find_element_by_xpath('//*[@id="valEmail"]')
+    time.sleep(x)
     print('found email')
     login_email.send_keys(env.EMAIL)
-else:
+except:
     print('Cant find email')
     driver.quit()
-time.sleep(2)
+time.sleep(x)
 
 # agreement button
-check_box = driver.find_element_by_xpath('//*[@id="i2"]')
-if(check_box):
+
+try:
+    check_box = driver.find_element_by_xpath('//*[@id="i2"]')
     print('checkbox')
     driver.execute_script("arguments[0].click();", check_box)
-else:
+except:
     print('Cant find checkbox')
     driver.quit()
-time.sleep(2)
+time.sleep(x)
 
 
-next_btn = driver.find_element_by_xpath('//*[@id="send"]')
-if(next_btn):
+
+try:
+    next_btn = driver.find_element_by_xpath('//*[@id="send"]')
     print('next')
     driver.execute_script("arguments[0].click();", next_btn)
 
-else:
+except:
     print('Cant find next')
     driver.quit()
-time.sleep(4)
+time.sleep(x)
 
-enter_pswd = driver.find_element_by_xpath('//*[@id="otp_box"]/input')
-if(enter_pswd):
+
+try:
+    enter_pswd = driver.find_element_by_xpath('//*[@id="otp_box"]/input')
     print('found pswd')
     enter_pswd.send_keys(env.PSWD)
-else:
+except:
     print('pswd not found')
     driver.quit()
 
-time.sleep(2)
+time.sleep(x)
 
-pswd_next_btn = driver.find_element_by_xpath("//input[@value='Next']")
-if(pswd_next_btn):
+
+try:
+    pswd_next_btn = driver.find_element_by_xpath("//input[@value='Next']")
     print('found pswd next')
     driver.execute_script("arguments[0].click();", pswd_next_btn)
    
-else:
+except:
     print('pswd next not found')
     driver.quit()
-# driver.quit()
+
+driver.close()    
+driver.quit()
 
 # print('We reached the end')
 
-time.sleep(10)
+time.sleep(x)
 
-btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
-driver.execute_script("arguments[0].click();", btn)
+# btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
+# driver.execute_script("arguments[0].click();", btn)
+
+
+
+
 
 
 # grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
