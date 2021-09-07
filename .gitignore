@@ -92,7 +92,6 @@ typings/
 .env
 .env.test
 env.py
-examp.py
 
 # parcel-bundler cache (https://parceljs.org/)
 

@@ -1,18 +1,18 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import time
 import env
 import random
+
+
 # chrome options
 chrome_options = Options()
 # chrome_options.add_argument('--headless')
-chrome_options.add_argument('start-maximized')
-chrome_options.add_argument('--disable-notifications')
+# chrome_options.add_argument('start-maximized')
+# chrome_options.add_argument('--disable-notifications')
 
-x = random.randint(4,20)
+x = random.randint(4,60)
 # URL france events
 url = "https://10times.com"
 
@@ -26,7 +26,7 @@ driver.get(url)
 
 # Issues with Exceptions thrown on button click (known issue with Chrome driver), so used this code to reach and activate button. 
 driver.maximize_window()
-time.sleep(7)
+time.sleep(8)
 
 
 # Login
@@ -46,7 +46,6 @@ time.sleep(x)
 
 try:
     login_email = driver.find_element_by_xpath('//*[@id="valEmail"]')
-    time.sleep(x)
     print('found email')
     login_email.send_keys(env.EMAIL)
 except:
@@ -98,38 +97,43 @@ except:
     print('pswd next not found')
     driver.quit()
 
-driver.close()    
-driver.quit()
-
-# print('We reached the end')
 
 time.sleep(x)
 
-# btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
-# driver.execute_script("arguments[0].click();", btn)
 
 
+# Grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
 
-
-
-
-# grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
 countries = []
+# options = []
 
-time.sleep(7)
-drop_down = driver.find_element_by_xpath('//*[@id="country"]')
+try:
+    btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
+    driver.execute_script("arguments[0].click();", btn)
 
-options = [x for x in drop_down.find_elements_by_tag_name("option")]
+except:
+    driver.quit()
+
+try:
+
+    drop_down = driver.find_element_by_xpath('//*[@id="country"]')
+    options = [x for x in drop_down.find_elements_by_tag_name("option")]
+
+except:
+    driver.quit()
 
 for element in options:
     countries.append(element.get_attribute("value"))
 
-driver.close()
-
-
-
-
 print(countries)
 
+driver.close()
 driver.quit()
+
+
+
+
+
+
+
 
