@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 import env
 import random
+import mimic
 
 
 # chrome options
@@ -12,25 +13,29 @@ chrome_options = Options()
 # chrome_options.add_argument('start-maximized')
 # chrome_options.add_argument('--disable-notifications')
 
-x = random.randint(4,60)
+# x = random.randint(4,60)
 # URL france events
-url = "https://10times.com"
+URL = "https://10times.com"
 
 # Where chromedriver is located on my machine
 PATH = '../../drivers/chromedriver'
 
 driver = webdriver.Chrome(PATH, options=chrome_options) 
+random_sleep = random.randint(4,300)
+sleep = round((random_sleep / 7), 4)
 
-
-driver.get(url) 
 
 # Issues with Exceptions thrown on button click (known issue with Chrome driver), so used this code to reach and activate button. 
+country_url = []
+countries = []
+
+
+
+driver.get(URL) 
+
 driver.maximize_window()
-time.sleep(8)
-
-
+time.sleep(sleep)
 # Login
-# login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
 try:
     login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
 
@@ -41,7 +46,7 @@ except:
     driver.close()
     driver.quit()
 
-time.sleep(x)
+time.sleep(sleep)
 
 
 try:
@@ -51,7 +56,7 @@ try:
 except:
     print('Cant find email')
     driver.quit()
-time.sleep(x)
+time.sleep(sleep)
 
 # agreement button
 
@@ -62,7 +67,7 @@ try:
 except:
     print('Cant find checkbox')
     driver.quit()
-time.sleep(x)
+time.sleep(sleep)
 
 
 
@@ -74,7 +79,7 @@ try:
 except:
     print('Cant find next')
     driver.quit()
-time.sleep(x)
+time.sleep(sleep)
 
 
 try:
@@ -85,27 +90,25 @@ except:
     print('pswd not found')
     driver.quit()
 
-time.sleep(x)
+time.sleep(sleep * 2)
 
 
 try:
     pswd_next_btn = driver.find_element_by_xpath("//input[@value='Next']")
     print('found pswd next')
     driver.execute_script("arguments[0].click();", pswd_next_btn)
-   
+
 except:
     print('pswd next not found')
     driver.quit()
 
 
-time.sleep(x)
+time.sleep(sleep)
 
 
-
+# def countries():  
 # Grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
 
-countries = []
-# options = []
 
 try:
     btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
@@ -122,13 +125,39 @@ try:
 except:
     driver.quit()
 
+
+
 for element in options:
+
     countries.append(element.get_attribute("value"))
+    
 
-print(countries)
+# for country in range(len(countries)):
+#     country_url = 'https://10times.com' + countries[country]
+#     country_url.append(country_url)
+# print(country_url)
+with open('countries.txt', 'w') as file:
+    try:
+        for country in countries:
+            file.write(f'https://10times.com{country}')
+            file.write('\n')
+    except:
+        driver.close()
+        driver.quit()   
 
+# print(countries)
 driver.close()
-driver.quit()
+driver.quit() 
+
+
+
+
+
+
+
+
+    
+
 
 
 
