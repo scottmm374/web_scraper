@@ -1,73 +1,195 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import Select
-import time
+from time import sleep
+import random
 
 from selenium.webdriver.chrome.options import Options
 
 # chrome options
 chrome_options = Options()
-# chrome_options.add_argument('--headless')
-chrome_options.add_argument('start-maximized')
-chrome_options.add_argument('--disable-notifications')
-chrome_options.add_argument('--disable-popup-blocking')
-# chrome_options.add_argument('start-maximized')
-
+chrome_options.add_argument('--headless')
+random_sleep = random.randint(4,300)
+sleeping = round((random_sleep / 7), 4)
+print(sleeping)
+# URL france events
 
 # URL france events (Will change to dynmaic endpoint)
-url = "https://10times.com/france"
+france_url = "https://10times.com/le-cuir-a-paris"
 
 # Where chromedriver is located on my machine
 PATH = '../../drivers/chromedriver'
 
 driver = webdriver.Chrome(PATH) 
-driver.get(url) 
-time.sleep(7)
-
-# login
-
-# search_username_by_id = driver.find_element_by_id('//*[@id="userEmail"]')
-# search_username_by_id.send_keys("scottmichelle74@gmail.com")
-
-# /html/body/div[8]/div/div/div/div[2]/div/form/div[2]/svg  xpath to accept button
-
-# input password
-# search_password_by_id = driver.find_element_by_id("password")
-# search_password_by_id.send_keys("") # remove senstive data to push code until encrytiopn can be set up
-
-# execute the login button
-# login_button = driver.find_element_by_id("fs-login-button")
-# login_button.send_keys(Keys.RETURN)
-# Navigate to the ticker symbol A
-
-# driver.find_element_by_tag_name('body').send_keys(Keys.DOWN)
-
-# Scroll works but not completly as of yet.
-ScrollNumber = 50
-for i in range(1, ScrollNumber):
-    time.sleep(5)
-    driver.execute_script('window.scrollTo(1,50000)')
-    time.sleep(5)
-
-# grabbing all event href and storing in list to iterate through, each page
+driver.get(france_url) 
+driver.maximize_window()
+sleep(sleeping)
 events_france = []
+event_single = []
+titles = []
+# SCROLL_PAUSE_TIME = 20
 
-time.sleep(3)
-events = driver.find_element_by_xpath('//*[@id="listing-events"]')
-event = [x for x in events.find_elements_by_tag_name("a")]
+# Get scroll height
+last_height = driver.execute_script("return document.body.scrollHeight")
+sleep(sleeping)
+while True:
 
-for eve in event:
-    events_france.append(eve.get_attribute("href"))
+    random_sleep = random.randint(4,300)
+    sleep = round((random_sleep / 3), 4)
 
+    # Scroll down to bottom
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    events = driver.find_element_by_xpath('//*[@id="listing-events"]')
+
+    if events:
+        sleep(sleeping)
+        event = events.find_element_by_tag_name('h2')
+        event_single.append(event)
+    else:
+       print('cant find')
+       driver.close()
+       driver.quit()
+    
+    # event = [x for x in events.find_elements_by_tag_name("a")]
+    # titles = [x.text for x in events.find_elements_by_tag_name("h2")]
+    # print(titles)
+    
+    # Wait to load page
+    sleep(sleeping)
+
+
+    # Calculate new scroll height and compare with last scroll height
+    new_height = driver.execute_script("return document.body.scrollHeight")
+    if new_height == last_height:
+        break
+    last_height = new_height
+
+# driver.close()
+originalWindow = driver.current_window_handle
+
+# def scrape(link):
+#     """
+#     scrape function that takes in a link grabbed from the title
+#     then clicks on the page
+#     after sent the the page its then scrapped for all the information we need
+#     """
+#     driver.get(link)
+#     time.sleep(sleep)
+#     print(sleep)
+#     title = driver.find_element_by_tag_name("h1").text
+#     print(title)
+
+
+# for eve in event:
+#     if eve.text in titles:
+#         events_france.append(eve.get_attribute("href"))
+# total = 0
+# for links in events_france:
+#     scrape(links)
+#     driver.switch_to.window(originalWindow)
+#     total += 1
+
+
+# print(total)
 driver.close()
+driver.quit()
 
 
-# Next step figure out a proper data structure (Dictionary (key = event name) with list of information as value?), or convert into csv instead?
+
 
 print(len(events_france))
+print(events_france)
+
+
+# Scroll works but not completly as of yet, needs some human timing and interactions. .
+# ScrollNumber = 50
+# for i in range(1, ScrollNumber):
+#     time.sleep(random_sleep)
+#     driver.execute_script('window.scrollTo(1,50000)')
+#     time.sleep(random_sleep)
+
+# grabbing all event href and storing in list to iterate through, each page
+# events_france = []
+# time.sleep(random_sleep)
+
+
+# try:
+#     title = driver.find_element_by_css_selector('.col-md-10 > div:nth-child(3) > h1:nth-child(1)')
+#     events_france.append(title)
+#     print("Title", title)
+
+# except:
+#     print('Not found')
+#     driver.quit()
+
+# time.sleep(random_sleep)
+
+# try:
+#     date = driver.find_element_by_css_selector('div.mb-0:nth-child(4) > span:nth-child(2)')
+#     events_france.append(date)
+#     print("links")
+
+# except:
+#     print('Not found')
+#     driver.quit()
+# try:
+#     links = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/h2/a')
+#     print("links")
+#     driver.execute_script("arguments[0].click();", links)
+
+# except:
+#     print('Not found')
+#     driver.quit()
+#     try:
+#     links = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/h2/a')
+#     print("links")
+#     driver.execute_script("arguments[0].click();", links)
+
+# except:
+#     print('Not found')
+#     driver.quit()
+#     try:
+#     links = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/h2/a')
+#     print("links")
+#     driver.execute_script("arguments[0].click();", links)
+
+# except:
+#     print('Not found')
+#     driver.quit()
+#     try:
+#     links = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/h2/a')
+#     print("links")
+#     driver.execute_script("arguments[0].click();", links)
+
+# except:
+#     print('Not found')
+#     driver.quit()
+# try:
+#     links = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/h2/a')
+#     print("links")
+#     driver.execute_script("arguments[0].click();", links)
+
+# except:
+#     print('Not found')
+#     driver.quit()
+
+
+
+
+# events = driver.find_element_by_xpath('//*[@id="listing-events"]')
+# event = [x for x in events.find_elements_by_tag_name("a")]
+
+# for eve in event:
+#     events_france.append(eve.get_attribute("href"))
+
+
+# print(len(events_france))
+# print(events_france)
+driver.close()
+driver.quit()
+
+
+
+
 
 
 
