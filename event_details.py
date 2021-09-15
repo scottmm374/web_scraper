@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from time import sleep
 import random
 import csv
+import env
 
 
 # chrome options
@@ -18,9 +19,9 @@ print(sleeping)
 france_url = "https://10times.com/le-cuir-a-paris"
 
 # Where chromedriver is located on my machine
-PATH = '../../drivers/chromedriver'
+# PATH = '../../drivers/chromedriver'
 
-driver = webdriver.Chrome(PATH, options=chrome_options) 
+driver = webdriver.Chrome(env.PATH, options=chrome_options) 
 driver.get(france_url) 
 driver.maximize_window()
 sleep(10)
@@ -33,16 +34,20 @@ event_single = []
 # Grabs all text elements in table, have to clean up data.
 timings = driver.find_element_by_xpath('//*[@id="content"]/section[3]/table')
 
+# Grabs all the details from table into a list that needs to be formatted before saving
 text = [timings.get_attribute('innerText').replace('\n', ',')]
-
+print("Table details: \n " , text)
+print('<----------------------------------------------->')
+print('<----------------------------------------------->')
 
 # Gets the description
 desc = driver.find_element_by_xpath('/html/body/div[1]/div[3]/div/div/div[1]/div/section[1]/p').text
-print(desc)
+print("Event Description: \n ", desc)
+print('<----------------------------------------------->')
 
-print(text)
+
 address = driver.find_element_by_xpath('/html/body/div[1]/section/div/div[2]/div[4]').text
-print(address)
+print("Address: \n ", address)
    
 driver.close()
 driver.quit()

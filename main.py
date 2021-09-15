@@ -1,12 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-import time
+from time import sleep
 import env
 import random
 
 
-# chrome options
+# ! chrome options
 chrome_options = Options()
 chrome_options.add_argument('--disable-notifications')
 
@@ -14,22 +14,20 @@ URL = "https://10times.com"
 france_url = "https://10times.com/france"
 
 # Where chromedriver is located on my machine
-PATH = '../../drivers/chromedriver'
+# PATH = '../../drivers/chromedriver'
 
-driver = webdriver.Chrome(PATH, options=chrome_options) 
-random_sleep = random.randint(20,300)
-sleep = round((random_sleep / 3), 4)
-
+driver = webdriver.Chrome(env.PATH, options=chrome_options) 
+random_sleep = round(random.randint(4,100) /3, 4)
+print(random_sleep)
 country_url = []
 countries = []
 
 driver.get(URL) 
 
 driver.maximize_window()
-time.sleep(sleep)
-print(sleep)
+sleep(random_sleep)
 
-# Login
+# ! Login
 try:
     login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
 
@@ -40,8 +38,7 @@ except:
     driver.close()
     driver.quit()
 
-time.sleep(sleep)
-print(sleep)
+sleep(random_sleep)
 
 
 try:
@@ -51,10 +48,9 @@ try:
 except:
     print('Cant find email')
     driver.quit()
-time.sleep(sleep)
-print(sleep)
+sleep(random_sleep)
 
-# agreement button
+# ! agreement button
 
 try:
     check_box = driver.find_element_by_xpath('//*[@id="i2"]')
@@ -63,10 +59,9 @@ try:
 except:
     print('Cant find checkbox')
     driver.quit()
-time.sleep(sleep)
-print(sleep)
+sleep(random_sleep)
 
-
+# ! Next button 
 
 try:
     next_btn = driver.find_element_by_xpath('//*[@id="send"]')
@@ -76,8 +71,9 @@ try:
 except:
     print('Cant find next')
     driver.quit()
-time.sleep(sleep)
-print(sleep)
+sleep(random_sleep)
+
+# ! Password entry
 
 
 try:
@@ -88,10 +84,9 @@ except:
     print('pswd not found')
     driver.quit()
 
-time.sleep(sleep)
-print(sleep)
+sleep(random_sleep)
 
-
+#  !Password Submit button
 try:
     pswd_next_btn = driver.find_element_by_xpath("//input[@value='Next']")
     print('found pswd next')
@@ -102,49 +97,48 @@ except:
     driver.quit()
 
 
-time.sleep(sleep)
-print(sleep)
+sleep(random_sleep)
 
-# TRYING FRANCE  SCROLL 
+# !TRYING France SCROLL 
 
-events_france = []
 event_single = []
-titles = []
 
 driver.get(france_url)
 driver.maximize_window()
-time.sleep(19.564)
+sleep(random_sleep)
 
-scroll_pause = 20
-# Get scroll height
+
+#  !Get scroll height
 last_height = driver.execute_script("return document.body.scrollHeight")
-time.sleep(sleep)
-print(sleep)
+sleep(random_sleep)
 
-# SCROLL through france events
+# ! SCROLL through france events
 
 while True:
-    random_sleep = random.randint(0,60)
-    sleep = round((random_sleep / 3), 4)
-
-    # Scroll down to bottom
+    
+    # !Scroll down to bottom
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    # events = driver.find_element_by_xpath('//*[@id="listing-events"]')
+
+    # !wait to load page
+    sleep(random_sleep)
+
+ 
+
+
+    # !Grabbing titles in France to append to end of base url
     events = driver.find_element_by_xpath('//*[@id="listing-events"]')
-
-    # wait to load page
-    time.sleep(scroll_pause)  
-
-
-    # Grabbing titles in France to append to end of base url
-    event = events.find_element_by_tag_name('a')
-    event_single.append(event)
+    sleep(random_sleep)
+    event = [x for x in events.find_elements_by_class_name("text-decoration-none")]
+    # event = events.find_element_by_tag_name('a')
+    # event_single.append(event)
     
     titles = [x.text for x in events.find_elements_by_tag_name("h2")]
     print(titles)
     
    
 
-    # Calculate new scroll height and compare with last scroll height
+    # !Calculate new scroll height and compare with last scroll height
     new_height = driver.execute_script("return document.body.scrollHeight")
     if new_height == last_height:
         break
