@@ -1,148 +1,177 @@
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-from time import sleep
+from selenium.webdriver.common.action_chains import ActionChains
+import time
 import env
 import random
 
 
-# ! chrome options
 chrome_options = Options()
 chrome_options.add_argument('--disable-notifications')
+driver = webdriver.Chrome(env.PATH, options=chrome_options)
 
 URL = "https://10times.com"
 france_url = "https://10times.com/france"
 
-# Where chromedriver is located on my machine
-# PATH = '../../drivers/chromedriver'
 
-driver = webdriver.Chrome(env.PATH, options=chrome_options) 
-random_sleep = round(random.randint(4,100) /3, 4)
-print(random_sleep)
-country_url = []
-countries = []
+def random_sleep():
+    sleeping = round(random.randint(4,200) /5, 4)
+    print('Random sleep should be', sleeping)
+    return sleeping
 
+def random_mouse_hover(drive):
+    ActionChains(drive).move_by_offset(random.uniform(1, 20), random.uniform(1, 20)).perform()
+    time.sleep(random_sleep())
+
+
+    
 driver.get(URL) 
-
 driver.maximize_window()
-sleep(random_sleep)
+random_mouse_hover(driver)
+start = time.time()
+time.sleep(random_sleep())
+end = time.time()
+print(f"first took {(end - start):.5f} seconds")
 
-# ! Login
-try:
-    login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
 
-    print('found login')
-    driver.execute_script("arguments[0].click();", login_link)
-except:
-    print('Cant find Login')
-    driver.close()
+
+ 
+def login():
+    try:
+        login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
+        print('found login')
+        driver.execute_script("arguments[0].click();", login_link)
+        
+    except:
+        print('Cant find Login')
+        driver.close()
+        driver.quit()
+    
+    random_mouse_hover(driver)
+
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"Login took {(end - start):.5f} seconds")
+    
+    try:
+        
+        login_email = driver.find_element_by_xpath('//*[@id="valEmail"]')
+        print('found email')
+        login_email.send_keys(env.EMAIL)
+        
+    except:
+        print('Cant find email')
+        driver.quit()
+
+   
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"email took {(end - start):.5f} seconds")
+
+    try:
+        check_box = driver.find_element_by_xpath('//*[@id="i2"]')
+        print('checkbox')
+        driver.execute_script("arguments[0].click();", check_box)
+    except:
+        print('Cant find checkbox')
+        driver.quit()
+
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"check took {(end - start):.5f} seconds")
+
+    random_mouse_hover(driver)
+    
+
+    try:
+        next_btn = driver.find_element_by_xpath('//*[@id="send"]')
+        print('next')
+        driver.execute_script("arguments[0].click();", next_btn)
+
+    except:
+        print('Cant find next')
+        driver.quit()
+
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"next took {(end - start):.5f} seconds")
+
+    
+    try:
+        enter_pswd = driver.find_element_by_xpath('//*[@id="otp_box"]/input')
+        print('found pswd')
+        enter_pswd.send_keys(env.PSWD)
+    except:
+        print('pswd not found')
+        driver.quit()
+
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"password took {(end - start):.5f} seconds")
+    random_mouse_hover(driver)
+    
+    try:
+        pswd_next_btn = driver.find_element_by_xpath("//input[@value='Next']")
+        print('found pswd next')
+        driver.execute_script("arguments[0].click();", pswd_next_btn)
+
+    except:
+        print('pswd next not found')
+        driver.quit()
+
+
     driver.quit()
-
-sleep(random_sleep)
-
-
-try:
-    login_email = driver.find_element_by_xpath('//*[@id="valEmail"]')
-    print('found email')
-    login_email.send_keys(env.EMAIL)
-except:
-    print('Cant find email')
-    driver.quit()
-sleep(random_sleep)
-
-# ! agreement button
-
-try:
-    check_box = driver.find_element_by_xpath('//*[@id="i2"]')
-    print('checkbox')
-    driver.execute_script("arguments[0].click();", check_box)
-except:
-    print('Cant find checkbox')
-    driver.quit()
-sleep(random_sleep)
-
-# ! Next button 
-
-try:
-    next_btn = driver.find_element_by_xpath('//*[@id="send"]')
-    print('next')
-    driver.execute_script("arguments[0].click();", next_btn)
-
-except:
-    print('Cant find next')
-    driver.quit()
-sleep(random_sleep)
-
-# ! Password entry
-
-
-try:
-    enter_pswd = driver.find_element_by_xpath('//*[@id="otp_box"]/input')
-    print('found pswd')
-    enter_pswd.send_keys(env.PSWD)
-except:
-    print('pswd not found')
-    driver.quit()
-
-sleep(random_sleep)
-
-#  !Password Submit button
-try:
-    pswd_next_btn = driver.find_element_by_xpath("//input[@value='Next']")
-    print('found pswd next')
-    driver.execute_script("arguments[0].click();", pswd_next_btn)
-
-except:
-    print('pswd next not found')
-    driver.quit()
-
-
-sleep(random_sleep)
-
+login()
 # !TRYING France SCROLL 
 
-event_single = []
+# event_single = []
 
-driver.get(france_url)
-driver.maximize_window()
-sleep(random_sleep)
+# driver.get(france_url)
+# driver.maximize_window()
+# sleep(random_sleep)
 
 
-#  !Get scroll height
-last_height = driver.execute_script("return document.body.scrollHeight")
-sleep(random_sleep)
+# #  !Get scroll height
+# last_height = driver.execute_script("return document.body.scrollHeight")
+# sleep(random_sleep)
 
-# ! SCROLL through france events
+# # ! SCROLL through france events
 
-while True:
+# while True:
     
-    # !Scroll down to bottom
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    # events = driver.find_element_by_xpath('//*[@id="listing-events"]')
+#     # !Scroll down to bottom
+#     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+#     # events = driver.find_element_by_xpath('//*[@id="listing-events"]')
 
-    # !wait to load page
-    sleep(random_sleep)
+#     # !wait to load page
+#     sleep(random_sleep)
 
  
 
 
-    # !Grabbing titles in France to append to end of base url
-    events = driver.find_element_by_xpath('//*[@id="listing-events"]')
-    sleep(random_sleep)
-    event = [x for x in events.find_elements_by_class_name("text-decoration-none")]
-    # event = events.find_element_by_tag_name('a')
-    # event_single.append(event)
+#     # !Grabbing titles in France to append to end of base url
+#     events = driver.find_element_by_xpath('//*[@id="listing-events"]')
+#     sleep(random_sleep)
+#     event = [x for x in events.find_elements_by_class_name("text-decoration-none")]
+#     # event = events.find_element_by_tag_name('a')
+#     # event_single.append(event)
     
-    titles = [x.text for x in events.find_elements_by_tag_name("h2")]
-    print(titles)
+#     titles = [x.text for x in events.find_elements_by_tag_name("h2")]
+#     print(titles)
     
    
 
-    # !Calculate new scroll height and compare with last scroll height
-    new_height = driver.execute_script("return document.body.scrollHeight")
-    if new_height == last_height:
-        break
-    last_height = new_height
+#     # !Calculate new scroll height and compare with last scroll height
+#     new_height = driver.execute_script("return document.body.scrollHeight")
+#     if new_height == last_height:
+#         break
+#     last_height = new_height
 
 
 
@@ -172,10 +201,9 @@ while True:
 #     driver.switch_to.window(originalWindow)
 #     total += 1
 
-print(event_single)
-print(titles)
-driver.close()
-driver.quit()
+# print(event_single)
+# print(titles)
+
 
 
 # Grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
