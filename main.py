@@ -25,18 +25,21 @@ def random_mouse_hover(drive):
 
 
     
-driver.get(URL) 
-driver.maximize_window()
-random_mouse_hover(driver)
-start = time.time()
-time.sleep(random_sleep())
-end = time.time()
-print(f"first took {(end - start):.5f} seconds")
+
 
 
 
  
 def login():
+
+    driver.get(URL) 
+    driver.maximize_window()
+    random_mouse_hover(driver)
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"first took {(end - start):.5f} seconds")
+
     try:
         login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
         print('found login')
@@ -173,56 +176,75 @@ def countries_grab(cb):
     driver.close()
     driver.quit()
 
-countries_grab(login())
-
-# !TRYING France SCROLL 
-
-# event_single = []
-
-# driver.get(france_url)
-# driver.maximize_window()
-# sleep(random_sleep)
+# countries_grab(login())
 
 
-# #  !Get scroll height
-# last_height = driver.execute_script("return document.body.scrollHeight")
-# sleep(random_sleep)
+def grab_event_url_by_country(cb):
+    event_single = []
 
-# # ! SCROLL through france events
+    random_mouse_hover(driver)
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"France took {(end - start):.5f} seconds")
 
-# while True:
+    driver.get(france_url)
+    driver.maximize_window()
+
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+
+
+    #  !Get scroll height
+    last_height = driver.execute_script("return document.body.scrollHeight")
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"France took {(end - start):.5f} seconds")
+    random_mouse_hover(driver)
+
+    # ! SCROLL through france events
+
+    while True:
+        
+        # !Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        start = time.time()
+        time.sleep(random_sleep())
+        end = time.time()
+        print(f"sleep for scroll took {(end - start):.5f} seconds")
+
+        random_mouse_hover(driver)
+
+
+        # !Grabbing titles in France to append to end of base url
+        events = driver.find_element_by_xpath('//*[@id="listing-events"]')
+        start = time.time()
+        time.sleep(random_sleep())
+        end = time.time()
+        print(f"find listings took {(end - start):.5f} seconds")
+        # event = [x for x in events.find_elements_by_class_name("text-decoration-none")]
+        # event = events.find_element_by_tag_name('a')
+        # event_single.append(event)
+        
+        titles = [x.text for x in events.find_elements_by_tag_name("h2")]
+        print(titles)
+        
     
-#     # !Scroll down to bottom
-#     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-#     # events = driver.find_element_by_xpath('//*[@id="listing-events"]')
 
-#     # !wait to load page
-#     sleep(random_sleep)
+        # !Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
 
- 
+    driver.close()
+    driver.quit()
 
+grab_event_url_by_country(login())
 
-#     # !Grabbing titles in France to append to end of base url
-#     events = driver.find_element_by_xpath('//*[@id="listing-events"]')
-#     sleep(random_sleep)
-#     event = [x for x in events.find_elements_by_class_name("text-decoration-none")]
-#     # event = events.find_element_by_tag_name('a')
-#     # event_single.append(event)
-    
-#     titles = [x.text for x in events.find_elements_by_tag_name("h2")]
-#     print(titles)
-    
-   
-
-#     # !Calculate new scroll height and compare with last scroll height
-#     new_height = driver.execute_script("return document.body.scrollHeight")
-#     if new_height == last_height:
-#         break
-#     last_height = new_height
-
-
-
-# originalWindow = driver.current_window_handle
 
 
 
