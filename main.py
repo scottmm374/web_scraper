@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 import time
@@ -16,7 +15,7 @@ france_url = "https://10times.com/france"
 
 
 def random_sleep():
-    sleeping = round(random.randint(4,200) /5, 4)
+    sleeping = round(random.randint(4,150) /3, 4)
     print('Random sleep should be', sleeping)
     return sleeping
 
@@ -126,8 +125,56 @@ def login():
         driver.quit()
 
 
+    
+
+
+
+""" Grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events"""
+
+def countries_grab(cb):
+    countries = []
+    random_mouse_hover(driver)
+    try:
+        btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
+        print("Country button found")
+        driver.execute_script("arguments[0].click();", btn)
+        print("Country button clicked")
+
+    except:
+        print("Country button NOT found")
+        driver.quit()
+
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"country button took {(end - start):.5f} seconds")
+    
+
+    try:
+        drop_down = driver.find_element_by_xpath('//*[@id="country"]')
+        print("dropdown found")
+        options = [x for x in drop_down.find_elements_by_tag_name("option")]
+
+    except:
+        print("dropdown NOT found")
+        driver.quit()
+    print('SUCCESS')
+    for element in options:
+        countries.append(element.get_attribute("value"))
+
+    with open('countries.txt', 'w') as file:
+        try:
+            for country in countries:
+                file.write(f'https://10times.com{country}')
+                file.write('\n')
+        except:
+            driver.close()
+            driver.quit()  
+    driver.close()
     driver.quit()
-login()
+
+countries_grab(login())
+
 # !TRYING France SCROLL 
 
 # event_single = []
@@ -178,70 +225,9 @@ login()
 # originalWindow = driver.current_window_handle
 
 
-# print(event_single)
-# def scrape(link):
-#     """
-#     scrape function that takes in a link grabbed from the title
-#     then clicks on the page
-#     after sent the the page its then scrapped for all the information we need
-#     """
-#     driver.get(link)
-#     time.sleep(sleep)
-#     print(sleep)
-#     title = driver.find_element_by_tag_name("h1").text
-#     print(title)
-
-
-# for eve in event:
-#     if eve.text in titles:
-#         events_france.append(eve.get_attribute("href"))
-# total = 0
-# for links in events_france:
-#     scrape(links)
-#     driver.switch_to.window(originalWindow)
-#     total += 1
-
-# print(event_single)
-# print(titles)
-
-
-
-# Grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events
-
-
-# try:
-#     btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
-#     driver.execute_script("arguments[0].click();", btn)
-
-# except:
-#     driver.quit()
-
-# try:
-
-#     drop_down = driver.find_element_by_xpath('//*[@id="country"]')
-#     options = [x for x in drop_down.find_elements_by_tag_name("option")]
-
-# except:
-#     driver.quit()
-
-# for element in options:
-#     countries.append(element.get_attribute("value"))
-
-# with open('countries.txt', 'w') as file:
-#     try:
-#         for country in countries:
-#             file.write(f'https://10times.com{country}')
-#             file.write('\n')
-#     except:
-#         driver.close()
-#         driver.quit()  
-
 
  
 
-# print(countries)
-# driver.close()
-# driver.quit() 
 
 
 
