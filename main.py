@@ -198,7 +198,7 @@ def scroll_page(cb):
     time.sleep(random_sleep())
     end = time.time()
     print(f"scroll took {(end - start):.5f} seconds")
-    
+
     random_mouse_hover(driver)
 
     while True:
@@ -249,9 +249,9 @@ def get_event_urls_by_country():
 
 
     
+countries_grab(login())
+# scroll_page(login())
 
-scroll_page(login())
-# countries_grab(login())
 
 
 

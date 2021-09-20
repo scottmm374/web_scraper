@@ -16,7 +16,7 @@ print(sleeping)
 
 
 # URL france events (Will change to dynmaic endpoint)
-france_url = "https://10times.com/le-cuir-a-paris"
+france_url = "https://10times.com/international-dental-show"
 
 # Where chromedriver is located on my machine
 # PATH = '../../drivers/chromedriver'
@@ -24,7 +24,7 @@ france_url = "https://10times.com/le-cuir-a-paris"
 driver = webdriver.Chrome(env.PATH, options=chrome_options) 
 driver.get(france_url) 
 driver.maximize_window()
-sleep(10)
+sleep(5)
 
 
 titles = []
@@ -34,20 +34,26 @@ event_single = []
 # Grabs all text elements in table, have to clean up data.
 timings = driver.find_element_by_xpath('//*[@id="content"]/section[3]/table')
 
+# first_row =driver.find_element_by_id('hvrout1')
+# headers = first_row.find_elements_by_tag_name('h2')
+# info = headers.find_element_by_xpath('')
+# print(headers)
+
 # Grabs all the details from table into a list that needs to be formatted before saving
+# text = timings.get_attribute('innerText')
 text = [timings.get_attribute('innerText').replace('\n', ',')]
 print("Table details: \n " , text)
 print('<----------------------------------------------->')
 print('<----------------------------------------------->')
 
 # Gets the description
-desc = driver.find_element_by_xpath('/html/body/div[1]/div[3]/div/div/div[1]/div/section[1]/p').text
-print("Event Description: \n ", desc)
-print('<----------------------------------------------->')
+# desc = driver.find_element_by_xpath('/html/body/div[1]/div[3]/div/div/div[1]/div/section[1]/p').text
+# print("Event Description: \n ", desc)
+# print('<----------------------------------------------->')
 
 
-address = driver.find_element_by_xpath('/html/body/div[1]/section/div/div[2]/div[4]').text
-print("Address: \n ", address)
+# address = driver.find_element_by_xpath('/html/body/div[1]/section/div/div[2]/div[4]').text
+# print("Address: \n ", address)
    
 driver.close()
 driver.quit()
