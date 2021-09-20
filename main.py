@@ -13,28 +13,27 @@ driver = webdriver.Chrome(env.PATH, options=chrome_options)
 URL = "https://10times.com"
 france_url = "https://10times.com/france"
 
-
+# Random sleep function created to avoid hardcoded sleep being detected. Had issues with using hardcoded sleeps and being kicked out of the website. 
 def random_sleep():
     sleeping = round(random.randint(4,150) /6, 4)
     print('Random sleep should be', sleeping)
     return sleeping
 
+
+# Random Mouse function to similate the occasional Mouse movements generally expected when a person visits a webpage
 def random_mouse_hover(drive):
     ActionChains(drive).move_by_offset(random.uniform(1, 20), random.uniform(1, 20)).perform()
     time.sleep(random_sleep())
 
 
-    
-
-
-
-
+# Login function, on landing page, needed for scroll function to continue on Events pages. Login popup after 5 scrolls while collecting events, so Login at start.  
  
 def login():
 
     driver.get(URL) 
     driver.maximize_window()
     random_mouse_hover(driver)
+
     start = time.time()
     time.sleep(random_sleep())
     end = time.time()
@@ -162,6 +161,7 @@ def countries_grab(cb):
         print("dropdown NOT found")
         driver.quit()
     print('SUCCESS')
+
     for element in options:
         countries.append(element.get_attribute("value"))
 
@@ -176,13 +176,16 @@ def countries_grab(cb):
     driver.close()
     driver.quit()
 
-# countries_grab(login())
+
+# Scroll function to scroll event pages
 def scroll_page(cb):
     
     print("In the Scroll function")
+
     driver.get(france_url)
     driver.maximize_window()
     random_mouse_hover(driver)
+
     start = time.time()
     time.sleep(random_sleep())
     end = time.time()
@@ -190,90 +193,65 @@ def scroll_page(cb):
 
     #  Get scroll height
     last_height = driver.execute_script("return document.body.scrollHeight")
-    # start = time.time()
-    # time.sleep(random_sleep())
-    # end = time.time()
-    # print(f"scroll took {(end - start):.5f} seconds")
+
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+    print(f"scroll took {(end - start):.5f} seconds")
+    
     random_mouse_hover(driver)
 
     while True:
         print("in while loop")
-        # !Scroll down to bottom
+
+        # Scroll down to bottom
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
         start = time.time()
         time.sleep(random_sleep())
         end = time.time()
         print(f"sleep for scroll took {(end - start):.5f} seconds")
-         # !Calculate new scroll height and compare with last scroll height
+
+         # Calculate new scroll height and compare with last scroll height
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
             break
-            
         last_height = new_height
         print("headed to events function")
-        get_event_urls()
+        get_event_urls_by_country()
 
         random_mouse_hover(driver)
-        # events = driver.find_element_by_id("listing-events")
-        # titles = [x for x in events.find_elements_by_tag_name("h2")]
-
-        # return titles
-    # for eve in titles:
-         
-    #     urls.append(eve.find_element_by_tag_name("a").get_attribute('href'))
-         
-
-
-       
     
     driver.delete_all_cookies()
     driver.close()
     driver.quit()
    
 
-
-def get_event_urls():
+"""
+Grabs event URLs in a tags after each scroll. Added to a set to avoid duplicates. 
+"""
+def get_event_urls_by_country():
     print('In events function')
     url_set = set() 
     events = driver.find_element_by_id("listing-events")
     titles = [x for x in events.find_elements_by_tag_name("h2")]
+
+    # TODO Create function to write to text file
     for eve in titles:
         url_set.add(eve.find_element_by_tag_name("a").get_attribute('href'))
 
     print(url_set)
 
 
-def grab_event_url_by_country(cb):
-    urls = []
-
-    driver.get(france_url)
-    driver.maximize_window()
-    random_mouse_hover(driver)
-
-    start = time.time()
-    time.sleep(random_sleep())
-    end = time.time()
-
-
-    events = driver.find_element_by_id("listing-events")
-    titles = [x for x in events.find_elements_by_tag_name("h2")]
-    for eve in titles:
-        time.sleep(2)
-        urls.append(eve.find_element_by_tag_name("a").get_attribute('href'))
-    print(urls)
-
-    scroll_page()
-    driver.close()
-    driver.quit()
 
 
 
 
-    # driver.close()
-    # driver.quit()
+
+    
 
 scroll_page(login())
+# countries_grab(login())
 
 
 
