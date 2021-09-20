@@ -15,7 +15,7 @@ france_url = "https://10times.com/france"
 
 
 def random_sleep():
-    sleeping = round(random.randint(4,150) /3, 4)
+    sleeping = round(random.randint(4,150) /6, 4)
     print('Random sleep should be', sleeping)
     return sleeping
 
@@ -177,37 +177,27 @@ def countries_grab(cb):
     driver.quit()
 
 # countries_grab(login())
-
-
-def grab_event_url_by_country(cb):
-    event_single = []
-
-    random_mouse_hover(driver)
-    start = time.time()
-    time.sleep(random_sleep())
-    end = time.time()
-    print(f"France took {(end - start):.5f} seconds")
-
+def scroll_page(cb):
+    
+    print("In the Scroll function")
     driver.get(france_url)
     driver.maximize_window()
-
+    random_mouse_hover(driver)
     start = time.time()
     time.sleep(random_sleep())
     end = time.time()
+    print(f"Scroll took {(end - start):.5f} seconds")
 
-
-    #  !Get scroll height
+    #  Get scroll height
     last_height = driver.execute_script("return document.body.scrollHeight")
-    start = time.time()
-    time.sleep(random_sleep())
-    end = time.time()
-    print(f"France took {(end - start):.5f} seconds")
+    # start = time.time()
+    # time.sleep(random_sleep())
+    # end = time.time()
+    # print(f"scroll took {(end - start):.5f} seconds")
     random_mouse_hover(driver)
 
-    # ! SCROLL through france events
-
     while True:
-        
+        print("in while loop")
         # !Scroll down to bottom
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
@@ -215,35 +205,75 @@ def grab_event_url_by_country(cb):
         time.sleep(random_sleep())
         end = time.time()
         print(f"sleep for scroll took {(end - start):.5f} seconds")
-
-        random_mouse_hover(driver)
-
-
-        # !Grabbing titles in France to append to end of base url
-        events = driver.find_element_by_xpath('//*[@id="listing-events"]')
-        start = time.time()
-        time.sleep(random_sleep())
-        end = time.time()
-        print(f"find listings took {(end - start):.5f} seconds")
-        # event = [x for x in events.find_elements_by_class_name("text-decoration-none")]
-        # event = events.find_element_by_tag_name('a')
-        # event_single.append(event)
-        
-        titles = [x.text for x in events.find_elements_by_tag_name("h2")]
-        print(titles)
-        
-    
-
-        # !Calculate new scroll height and compare with last scroll height
+         # !Calculate new scroll height and compare with last scroll height
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
             break
+            
         last_height = new_height
+        print("headed to events function")
+        get_event_urls()
 
+        random_mouse_hover(driver)
+        # events = driver.find_element_by_id("listing-events")
+        # titles = [x for x in events.find_elements_by_tag_name("h2")]
+
+        # return titles
+    # for eve in titles:
+         
+    #     urls.append(eve.find_element_by_tag_name("a").get_attribute('href'))
+         
+
+
+       
+    
+    driver.delete_all_cookies()
+    driver.close()
+    driver.quit()
+   
+
+
+def get_event_urls():
+    print('In events function')
+    url_set = set() 
+    events = driver.find_element_by_id("listing-events")
+    titles = [x for x in events.find_elements_by_tag_name("h2")]
+    for eve in titles:
+        url_set.add(eve.find_element_by_tag_name("a").get_attribute('href'))
+
+    print(url_set)
+
+
+def grab_event_url_by_country(cb):
+    urls = []
+
+    driver.get(france_url)
+    driver.maximize_window()
+    random_mouse_hover(driver)
+
+    start = time.time()
+    time.sleep(random_sleep())
+    end = time.time()
+
+
+    events = driver.find_element_by_id("listing-events")
+    titles = [x for x in events.find_elements_by_tag_name("h2")]
+    for eve in titles:
+        time.sleep(2)
+        urls.append(eve.find_element_by_tag_name("a").get_attribute('href'))
+    print(urls)
+
+    scroll_page()
     driver.close()
     driver.quit()
 
-grab_event_url_by_country(login())
+
+
+
+    # driver.close()
+    # driver.quit()
+
+scroll_page(login())
 
 
 
