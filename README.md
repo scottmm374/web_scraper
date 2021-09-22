@@ -43,9 +43,12 @@ Disallow: /gold-premium$
 - [x] Entry Fees
 - [x] Estimated Turnout
 - [x] Catagory
+- [x] Type
 - [ ] Offical Links
 - [x] Frequency
 - [ ] Organizer
+- [ ] Editions
+- [ ] Different Located Editions
 
 :pushpin:  
 TODO
@@ -58,6 +61,12 @@ TODO
 - [ ] Read from Event file and create function to automate
 - [ ] Create CSV file of event details/per country
 - [ ] Create CSV file of event details/per country
+
+# Issues/Bugs
+
+main.py
+
+- get_event_urls_by_country() Only bringing in max 400 URLS from France/UK
 
 #Errors
 
@@ -82,3 +91,25 @@ Failed to load resource: the server responded with a status of 502 ()
 tag.crsspxl.com/m.gif?oxid=a20b5470-8786-4ac4-8b8d-624ee6d2af95:1
 :warning:
 Failed to load resource: net::ERR_EMPTY_RESPONSE
+
+---
+
+<!-- <script> source URI is not allowed in this document:  (Firefox) While browsing, No scrapper -->
+
+Loading failed for the <script> with source “https://www.googletagmanager.com/gtm.js?id=GTM-MMVJS3”. france:1:1
+[first-contentful-paint] 00:00:283 utility.js:20:3436
+[Service Worker] Sucess: https://10times.com/ utility.js:20:26778
+Loading failed for the <script> with source “https://cdn.onesignal.com/sdks/OneSignalSDK.js”. france:1:1
+Loading failed for the <script> with source “https://pagead2.googlesyndication.com/tag/js/gpt.js”. france:1:1
+Uncaught (in promise)
+error { target: script, isTrusted: true, srcElement: script
+, eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 1244, … }
+
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8525015516580200. (Reason: CORS request did not succeed).
+
+<script> source URI is not allowed in this document: “https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8525015516580200”. france:1:1
+Uncaught (in promise) 
+error { target: script, isTrusted: true, srcElement: script
+, eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 1250, … }
+
+This site appears to use a scroll-linked positioning effect. This may not work well with asynchronous panning; see https://firefox-source-docs.mozilla.org/performance/scroll-linked_effects.html for further details and to join the discussion on related tools and features!
