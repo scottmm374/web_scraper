@@ -3,9 +3,9 @@ from bs4 import BeautifulSoup
 import requests
 
 #    Testing different events to find consistent elements to grab # 
-# URL = 'https://10times.com/plastics-recycling-world-exhibition'
+URL = 'https://10times.com/plastics-recycling-world-exhibition'
 # URL = "https://10times.com/legion-sports-fest"
-URL = 'https://10times.com/med-tech-innovation'
+# URL = 'https://10times.com/med-tech-innovation'
 
 
 response = requests.get(URL)
@@ -26,5 +26,15 @@ print(repr(format_type.string))
 
 
 # Grabs the event name
-for string in top_wrapper.h1.stripped_strings:
-    print(repr(string))
+title = top_wrapper.h1.get_text()
+# for string in top_wrapper.h1.stripped_strings:
+#     print()
+print(title)
+
+# Grabs location from header
+
+location_finder = top_wrapper.findAll('div', attrs={'class': 'mb-0 fs-20'})
+# 2 divs with same class name, second one has text needed. 
+location = location_finder[1].get_text()
+
+print(location)
