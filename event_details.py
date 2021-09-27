@@ -1,70 +1,30 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from time import sleep
-import random
-import csv
-import env
+from bs4.element import whitespace_re
+from bs4 import BeautifulSoup
+import requests
+
+#    Testing different events to find consistent elements to grab # 
+# URL = 'https://10times.com/plastics-recycling-world-exhibition'
+# URL = "https://10times.com/legion-sports-fest"
+URL = 'https://10times.com/med-tech-innovation'
 
 
-# chrome options
-chrome_options = Options()
-chrome_options.add_argument('--headless')
+response = requests.get(URL)
+soup = BeautifulSoup(response.content, "html.parser")
 
-random_sleep = random.randint(4,100)
-sleeping = round((random_sleep / 7), 4)
-print(sleeping)
-
-
-# URL france events (Will change to dynmaic endpoint)
-france_url = "https://10times.com/international-dental-show"
-
-# Where chromedriver is located on my machine
-# PATH = '../../drivers/chromedriver'
-
-driver = webdriver.Chrome(env.PATH, options=chrome_options) 
-driver.get(france_url) 
-driver.maximize_window()
-sleep(5)
-
-
-titles = []
-event_single = []
-
-
-# Grabs all text elements in table, have to clean up data.
-timings = driver.find_element_by_xpath('//*[@id="content"]/section[3]/table')
-
-# first_row =driver.find_element_by_id('hvrout1')
-# headers = first_row.find_elements_by_tag_name('h2')
-# info = headers.find_element_by_xpath('')
-# print(headers)
-
-# Grabs all the details from table into a list that needs to be formatted before saving
-# text = timings.get_attribute('innerText')
-text = [timings.get_attribute('innerText').replace('\n', ',')]
-print("Table details: \n " , text)
-print('<----------------------------------------------->')
-print('<----------------------------------------------->')
-
-# Gets the description
-# desc = driver.find_element_by_xpath('/html/body/div[1]/div[3]/div/div/div[1]/div/section[1]/p').text
-# print("Event Description: \n ", desc)
-# print('<----------------------------------------------->')
-
-
-# address = driver.find_element_by_xpath('/html/body/div[1]/section/div/div[2]/div[4]').text
-# print("Address: \n ", address)
-   
-driver.close()
-driver.quit()
+# print(soup.prettify())
 
 
 
+# Grabbing elements from header at top, Format, Event Name, and Event Location, and Date
+
+# Narrow down elements only in header
+top_wrapper = soup.find('section', attrs={'class' : 'page-wrapper'})
+
+# Grabs Format type
+format_type = top_wrapper.find('span', attrs={'class' : 'label label-success me-1 fs-12 rounded-2'})
+print(repr(format_type.string))
 
 
-
-
-
-
-    
-    
+# Grabs the event name
+for string in top_wrapper.h1.stripped_strings:
+    print(repr(string))
