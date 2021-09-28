@@ -4,10 +4,10 @@ import requests
 import re
 
 #    Testing different events to find consistent elements to grab # 
-# URL = 'https://10times.com/plastics-recycling-world-exhibition'
+URL = 'https://10times.com/plastics-recycling-world-exhibition'
 # URL = "https://10times.com/legion-sports-fest"
 # URL = 'https://10times.com/med-tech-innovation'
-URL = 'https://10times.com/home-based-travel-agent-forum-exhibition'  
+# URL = 'https://10times.com/home-based-travel-agent-forum-exhibition'  
 # URL = 'https://10times.com/pour-lamour-du'
 
 
@@ -41,7 +41,7 @@ top_wrapper = soup.find('section', attrs={'class' : 'page-wrapper'})
 
 # Grabs Format type
 format_type = top_wrapper.find('span', attrs={'class' : 'label label-success me-1 fs-12 rounded-2'})
-event_single['Format'] = [repr(format_type.string)]
+event_single['Format'] = [format_type.string]
 # print(repr(format_type.string))
 
 
@@ -53,9 +53,12 @@ event_single['Event_name'] = [title]
 # Grabs location from header
 
 location_finder = top_wrapper.findAll('div', attrs={'class': 'mb-0 fs-20'})
+
 # 2 divs with same class name, second one has text needed. 
 
-
+# dates = location_finder
+dates = location_finder[0].get_text().replace('Add To Calendar', '')
+event_single['Dates'] = [dates]
 location = location_finder[1].get_text()
 event_single['Location'] = [location]
 
@@ -72,24 +75,14 @@ table_details = soup.find('table', attrs={'class': 'table noBorder mng w-100 trB
 
 # Table First Row section
 table_row = table_details.find('tr', attrs={'id': 'hvrout1'})
+
+# Entry Fees
 search_row = table_row.findAll('h2')
 for x in search_row:
     if x.text == 'Entry Fees':
        event_single['Entry_fees'] = [x.next_sibling.strip().replace('\n', '')]
     
-another_list = []
-# for x in table_row.descendants:
-    # fee = x.get_text().strip().replace('\n', '')
-    # print(x)
-    # another_list.append(fee)
-# print(another_list[1])
 
-
-# for fee in table_row.find('td', attrs={"class" :'dfdgg'}):
-# print(search_row.get_text())
-
-# for fee in table_row.findAll('td', attrs={'class': 'width:50%;' }):
-#     print(fee)
 
 """
     Timings, this will also need conditionals to search for more timings if expand is present
@@ -106,13 +99,6 @@ if time_list[-1] == 'ViewMore':
 event_single['Timings'] = time_list[1:]
 
 
-
-# print(time_list)
-
-#  Entry fees
-
-# entry_fee = fees.find('h2').stripped_strings
-# for fee in table_row.find('td', attrs={'class': 'width:50%;' }).get_text():
 
 
 # *  Estimated turnout 
@@ -155,10 +141,14 @@ event_single['Venue_address'] = addy
 
 
 table_section_3 = soup.find('tr', attrs={'id': 'hvrout3'})
-# TODO  Need to format the list to exclude headers
+
 edition_freq = []
 for element in table_section_3.find('td').stripped_strings:
-    edition_freq.append(element)
+
+        edition_freq.append(element)
+
+event_single['Editions'] = [edition_freq[1]]
+event_single['Frequency'] = [edition_freq[-1]]
 # print(edition_freq)
 
 '''
