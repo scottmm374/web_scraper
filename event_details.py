@@ -2,10 +2,12 @@ from bs4.element import whitespace_re
 from bs4 import BeautifulSoup
 import requests
 import re
+import csv
+import pandas as pd
 
 #    Testing different events to find consistent elements to grab # 
-URL = 'https://10times.com/plastics-recycling-world-exhibition'
-# URL = "https://10times.com/legion-sports-fest"
+# URL = 'https://10times.com/plastics-recycling-world-exhibition'
+URL = "https://10times.com/legion-sports-fest"
 # URL = 'https://10times.com/med-tech-innovation'
 # URL = 'https://10times.com/home-based-travel-agent-forum-exhibition'  
 # URL = 'https://10times.com/pour-lamour-du'
@@ -56,7 +58,6 @@ location_finder = top_wrapper.findAll('div', attrs={'class': 'mb-0 fs-20'})
 
 # 2 divs with same class name, second one has text needed. 
 
-# dates = location_finder
 dates = location_finder[0].get_text().replace('Add To Calendar', '')
 event_single['Dates'] = [dates]
 location = location_finder[1].get_text()
@@ -156,4 +157,24 @@ Originally searched for h3 with id, but different events place the venue name wi
 '''
 organization = soup.find(id="org-name").text
 event_single['Oragnizer'] = [organization]
-print(event_single)
+
+
+
+fieldnames = []
+
+for key, value in event_single.items():
+    fieldnames.append(key)
+    # row.append(str(value))
+   
+
+# with open('test.csv', 'w') as csvfile:
+#     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+#     writer.writeheader()
+#     writer.writerow(event_single)
+    # print(fieldnames)
+# print(event_single)
+
+with open('test.csv', 'a') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writerow(event_single)
+
