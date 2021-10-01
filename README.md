@@ -56,19 +56,28 @@ TODO
 - [x] Login function
 - [x] Scroll Function
 - [x] Write Country URL to text file
-- [ ] Write event URL to text file
-- [ ] Read from Country file and create function to automate
-- [ ] Read from Event file and create function to automate
+- [x] Write event URL to text file
+- [x] Read from countries.txt file and add date ranges (one year prev, monthy increment) to urls
 - [x] Create CSV file of event details/per country \*\* Note, data is there and writing, but I need to clean up the structure a bit
+- [ ] Read from event_data_range.txt and automate in scraper to visit each url.
+- [ ] create function, tie together with scroll to grab all events in date range per country
+- [ ] check if all event id's are unique
 
 # Issues/Bugs
 
-main.py
+### main.py :white_check_mark:
 
-- get_event_urls_by_country() Only bringing in max 400 URLS from France/UK
-  Solution, use date range on events page to move through events.
+- Issue :heavy_exclamation_mark:
+  get_event_urls_by_country() Only bringing in max 400 URLS from France/UK
+- possible solutions
+  possible Solution, use date range on events page to move through events.
+- Solved :white_check_mark:
+  date_picker.py created function to generate date ranges for urls.
+
+---
 
 #Errors
+Console errors 10times
 
 :warning:
 GET https://cm.g.doubleclick.net/pixel?google_nid=fluct_eb&google_push=AYg5qPL1ifOWeVQxHWhCzlJmOCU-YMOnhOYb0hE7-vwTydNWT4ZmYCFX85T0YiBDOALAaOXnLoFV0qfYf2eksatyUw-DR6Oxbfc&google_hm=523b3b7b1a86ec89e96f510d742a6daa net::ERR_TOO_MANY_REDIRECTS
@@ -89,27 +98,10 @@ https://www.chromium.org/Home/chromium-security/corb-for-developers
 :warning:
 Failed to load resource: the server responded with a status of 502 ()
 tag.crsspxl.com/m.gif?oxid=a20b5470-8786-4ac4-8b8d-624ee6d2af95:1
+
+---
+
 :warning:
 Failed to load resource: net::ERR_EMPTY_RESPONSE
 
 ---
-
-<!-- <script> source URI is not allowed in this document:  (Firefox) While browsing, No scrapper -->
-
-Loading failed for the <script> with source “https://www.googletagmanager.com/gtm.js?id=GTM-MMVJS3”. france:1:1
-[first-contentful-paint] 00:00:283 utility.js:20:3436
-[Service Worker] Sucess: https://10times.com/ utility.js:20:26778
-Loading failed for the <script> with source “https://cdn.onesignal.com/sdks/OneSignalSDK.js”. france:1:1
-Loading failed for the <script> with source “https://pagead2.googlesyndication.com/tag/js/gpt.js”. france:1:1
-Uncaught (in promise)
-error { target: script, isTrusted: true, srcElement: script
-, eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 1244, … }
-
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8525015516580200. (Reason: CORS request did not succeed).
-
-<script> source URI is not allowed in this document: “https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8525015516580200”. france:1:1
-Uncaught (in promise) 
-error { target: script, isTrusted: true, srcElement: script
-, eventPhase: 0, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, timeStamp: 1250, … }
-
-This site appears to use a scroll-linked positioning effect. This may not work well with asynchronous panning; see https://firefox-source-docs.mozilla.org/performance/scroll-linked_effects.html for further details and to join the discussion on related tools and features!
