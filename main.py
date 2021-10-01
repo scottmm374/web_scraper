@@ -226,7 +226,6 @@ def scroll_page(cb):
     driver.close()
     driver.quit()
    
-
 """
 Grabs event URLs in a tags after each scroll. Added to a set to avoid duplicates. 
 """

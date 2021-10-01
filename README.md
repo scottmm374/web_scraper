@@ -35,19 +35,19 @@ Disallow: /gold-premium$
 - [x] Format Type
 - [x] Start Date
 - [x] End Date
-- [ ] Location
+- [x] Location
 - [x] Event Venue
-- [ ] Event Address
+- [x] Event Address
 - [x] Description
 - [x] Timings
 - [x] Entry Fees
 - [x] Estimated Turnout
 - [x] Catagory
-- [x] Type
+- [x] Type (Same as Format I believe)
 - [ ] Offical Links
 - [x] Frequency
-- [ ] Organizer
-- [ ] Editions
+- [x] Organizer
+- [x] Editions
 - [ ] Different Located Editions
 
 :pushpin:  
@@ -59,14 +59,14 @@ TODO
 - [ ] Write event URL to text file
 - [ ] Read from Country file and create function to automate
 - [ ] Read from Event file and create function to automate
-- [ ] Create CSV file of event details/per country
-- [ ] Create CSV file of event details/per country
+- [x] Create CSV file of event details/per country \*\* Note, data is there and writing, but I need to clean up the structure a bit
 
 # Issues/Bugs
 
 main.py
 
 - get_event_urls_by_country() Only bringing in max 400 URLS from France/UK
+  Solution, use date range on events page to move through events.
 
 #Errors
 
