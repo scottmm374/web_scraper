@@ -11,7 +11,7 @@ chrome_options.add_argument('--disable-notifications')
 driver = webdriver.Chrome(env.PATH, options=chrome_options)
 
 URL = "https://10times.com"
-france_url = "https://10times.com/france"
+france_url = "https://10times.com/uruguay?datefrom=2021-02-04&dateto=2021-03-04"
 
 # Random sleep function created to avoid hardcoded sleep being detected. Had issues with using hardcoded sleeps and being kicked out of the website. 
 def random_sleep():
