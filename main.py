@@ -12,7 +12,9 @@ driver = webdriver.Chrome(env.PATH, options=chrome_options)
 
 URL = "https://10times.com"
 
-
+'''
+Adjusted some of these manually while testing how many events I can get with different date ranges. Date_picker needs to be adjusted to smaller ranges, may add date_picker as function here before each scroll rather then creating and saving urls to text file. 
+'''
 # France = 'https://10times.com/france?datefrom=2020-10-06&dateto=2020-11-05'
 # France ='https://10times.com/france?datefrom=2020-11-06&dateto=2020-12-05'
 # France ='https://10times.com/france?datefrom=2020-12-06&dateto=2021-01-05'
@@ -30,12 +32,6 @@ URL = "https://10times.com"
 France ='https://10times.com/france?datefrom=2021-09-30&dateto=2021-10-06'
 
 
-# def get_url():
-
-#     for url in range(len(url_list)):
-#         scroll_page(url_list[url])
-
-
 
 # Random sleep function created to avoid hardcoded sleep being detected. Had issues with using hardcoded sleeps and being kicked out of the website. 
 def random_sleep():
@@ -49,8 +45,11 @@ def random_mouse_hover(drive):
     ActionChains(drive).move_by_offset(random.uniform(1, 20), random.uniform(1, 20)).perform()
     time.sleep(random_sleep())
 
+'''
+Login function, on landing page, needed for scroll function to continue on Events pages. Login popup after 5 scrolls while collecting events, so Login at start. 
+MAY Not need this if we can adjust DATE ranges for Events effectivly. Larger countries like USA may have to use this function so Im keeping it here for now.  
+'''
 
-# Login function, on landing page, needed for scroll function to continue on Events pages. Login popup after 5 scrolls while collecting events, so Login at start.  
  
 # def login():
 
@@ -206,7 +205,6 @@ def scroll_page():
 
     
     print("In the Scroll function")
-    # get_url()
 
     driver.get(France)
     driver.maximize_window()
@@ -220,10 +218,6 @@ def scroll_page():
     #  Get scroll height
     last_height = driver.execute_script("return document.body.scrollHeight")
 
-    # start = time.time()
-    # time.sleep(random_sleep())
-    # end = time.time()
-    # print(f"scroll took {(end - start):.5f} seconds")
 
     random_mouse_hover(driver)
 
@@ -253,7 +247,7 @@ def scroll_page():
     driver.quit()
    
 """
-Grabs event URLs in a tags after each scroll. Added to a set to avoid duplicates. 
+Grabs event URLs AND event IDs. Added to a set to avoid duplicates with each scroll. 
 """
 def get_event_urls_by_country():
     print('In events function')
@@ -265,9 +259,6 @@ def get_event_urls_by_country():
     for element in titles:
         check_id.add(element.get_attribute('id'))
 
-
-
-    # TODO Create function to write to text file
     for event in titles:
         url_set.add(event.find_element_by_tag_name("a").get_attribute('href'))
 

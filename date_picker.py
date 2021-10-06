@@ -7,6 +7,7 @@ url_ranges = []
 
 
 # Generates url with a one month date range appended to country event url. 
+# TODO Adjust date ranges to smaller increments since ANY date range only allows a MAX of 400 events to be returned. 
 def date_range_generator (num_s, num_e, url):
    
     start_date = date.today() + relativedelta(months=-num_s)
@@ -15,6 +16,7 @@ def date_range_generator (num_s, num_e, url):
     
     
 # generates start and stop variables needed for date range generator function 
+# TODO Need to adjust
 def change_range():
     for x in range(len(url_list)-1):
         num_start = 13
@@ -45,5 +47,4 @@ with open('event_date_range.txt', 'w') as file:
             
            
         
-# "https://10times.com/usa?datefrom=2021-09-01&dateto=2022-10-07"
 
