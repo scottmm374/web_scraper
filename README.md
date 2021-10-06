@@ -105,3 +105,5 @@ tag.crsspxl.com/m.gif?oxid=a20b5470-8786-4ac4-8b8d-624ee6d2af95:1
 Failed to load resource: net::ERR_EMPTY_RESPONSE
 
 ---
+
+The FetchEvent for "https://connect.facebook.net/en_US/fbevents.js" resulted in a network error response: an object that was not a Response was passed to respondWith().
