@@ -39,10 +39,10 @@ with open('countries.txt') as countries:
 print(len(url_ranges), (len(url_list)-1) *12)
 
 # writing new Urls to text file with one year previous to todays date incremented monthy 
-with open('event_date_range.txt', 'w') as file:
-        for url in url_ranges:
-                file.write(url)
-                file.write('\n')
+# with open('event_date_range.txt', 'w') as file:
+#         for url in url_ranges:
+#                 file.write(url)
+#                 file.write('\n')
         
             
            
