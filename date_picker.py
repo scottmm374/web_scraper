@@ -1,30 +1,40 @@
 
-from datetime import date
-from dateutil.relativedelta import relativedelta
+from datetime import date, datetime, timedelta
+# from dateutil.relativedelta import relativedelta
 
 url_list = []
 url_ranges = []
+another_list=[]
+url_dates = []
 
+start_dt = date(2021, 10, 18)
+end_dt = date(2022, 10, 30)
 
-# Generates url with a one month date range appended to country event url. 
-# TODO Adjust date ranges to smaller increments since ANY date range only allows a MAX of 400 events to be returned. 
-def date_range_generator (num_s, num_e, url):
-   
-    start_date = date.today() + relativedelta(months=-num_s)
-    one_month = date.today() + relativedelta(months=-num_e)
-    url_ranges.append(f'{url}?datefrom={start_date}&dateto={one_month}')
+def create_url():
+
+    def dateRangeStart(start_date, end_date):
+        for n in range(0, int((end_date - start_date).days) + 1, 7):
+            yield start_date + timedelta(n)
+            yield start_date + timedelta(n + 6)
+    for dt in dateRangeStart(start_dt, end_dt):
+        url_dates.append(dt.strftime("%Y-%m-%d"))
     
+    # Grouping into start and end dates for 1 week range. 
+    step = 2     
+    for x in range(0, len(url_dates)-step+1, step):
+        another_list.append(url_dates[x:x+step])
+
+    global size
+    size = (len(another_list))
+
+# TODO Keeps adding url's at the end that include dates, but no url. All urls used adjust range.
     
-# generates start and stop variables needed for date range generator function 
-# TODO Need to adjust
-def change_range():
-    for x in range(len(url_list)-1):
-        num_start = 13
-        num_stop = 12
-        while num_stop != 0:
-            num_start = num_start - 1
-            num_stop = num_stop - 1
-            date_range_generator(num_start, num_stop, url_list[x])
+    for url in url_list:
+        for dates in another_list:
+            url_ranges.append(f'{url}?datefrom={dates[0]}&dateto={dates[1]}')
+        
+     
+
 
 
 # Pulls base url from countries txt file 
@@ -33,18 +43,24 @@ with open('countries.txt') as countries:
     while line:
         line = countries.readline()
         url_list.append(line.strip().replace('\n', ''))
-    change_range()
+    create_url()
+    
+    
 
-# checking that original list matched correct length when adding one month date range (subtracting one because last url is empty str, will adjust later in original write function)
-print(len(url_ranges), (len(url_list)-1) *12)
+
+print(len(url_ranges), (len(url_list)-1) *size)
 
 # writing new Urls to text file with one year previous to todays date incremented monthy 
-# with open('event_date_range.txt', 'w') as file:
-#         for url in url_ranges:
-#                 file.write(url)
-#                 file.write('\n')
+with open('event_date_range.txt', 'w') as file:
+        for url in url_ranges:
+            if not url.startswith('?'): 
+                    file.write(url)
+                    file.write('\n')
         
             
            
-        
+ 
+
+
+
 

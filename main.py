@@ -50,7 +50,8 @@ Login function, on landing page, needed for scroll function to continue on Event
 MAY Not need this if we can adjust DATE ranges for Events effectivly. Larger countries like USA may have to use this function so Im keeping it here for now.  
 '''
 
- 
+#  If Login needed
+
 # def login():
 
     # driver.get(URL) 
