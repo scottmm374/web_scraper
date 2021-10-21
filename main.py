@@ -8,34 +8,62 @@ import random
 
 chrome_options = Options()
 chrome_options.add_argument('--disable-notifications')
+chrome_options.add_argument('--headless')
+driver = webdriver.Chrome(env.PATH, options=chrome_options)
 driver = webdriver.Chrome(env.PATH, options=chrome_options)
 
-URL = "https://10times.com"
+# URL = "https://10times.com"
 
-'''
-Adjusted some of these manually while testing how many events I can get with different date ranges. Date_picker needs to be adjusted to smaller ranges, may add date_picker as function here before each scroll rather then creating and saving urls to text file. 
-'''
-# France = 'https://10times.com/france?datefrom=2020-10-06&dateto=2020-11-05'
-# France ='https://10times.com/france?datefrom=2020-11-06&dateto=2020-12-05'
-# France ='https://10times.com/france?datefrom=2020-12-06&dateto=2021-01-05'
-# France ='https://10times.com/france?datefrom=2021-01-06&dateto=2021-02-05'
-# France ='https://10times.com/france?datefrom=2021-02-06&dateto=2021-03-05'
-# France ='https://10times.com/france?datefrom=2021-03-06&dateto=2021-04-05'
-# France ='https://10times.com/france?datefrom=2021-04-06&dateto=2021-05-05'
-# France ='https://10times.com/france?datefrom=2021-05-06&dateto=2021-06-05'
-# France ='https://10times.com/france?datefrom=2021-06-06&dateto=2021-07-05'
-# France ='https://10times.com/france?datefrom=2021-07-06&dateto=2021-08-05'
-# France ='https://10times.com/france?datefrom=2021-08-06&dateto=2021-09-05'
-# France ='https://10times.com/france?datefrom=2021-09-06&dateto=2021-9-14'
-# France ='https://10times.com/france?datefrom=2021-09-15&dateto=2021-09-22'
-# France ='https://10times.com/france?datefrom=2021-09-23&dateto=2021-09-29'
-France ='https://10times.com/france?datefrom=2021-09-30&dateto=2021-10-06'
+
+# France ='https://10times.com/france?datefrom=2021-09-30&dateto=2021-10-06'
+
+
+def get_date_range_url():
+    with open('event_date_range.txt') as f:
+        for url in f:
+            get_event_urls_by_country(str(url))
+            
+            # scroll_page(str(url))
+
+
+
+def get_event_urls_by_country(url):
+    print('In events function')
+    url_set = set() 
+    check_id = set()
+    print('<------------------------------------->')
+    print("New Week" , url)
+    print('<------------------------------------->')
+    time.sleep(random_sleep())
+    driver.get(url)
+    driver.maximize_window()
+    time.sleep(random_sleep())
+    no_upcoming = driver.find_element_by_xpath('//*[@id="12"]')
+    check_upcoming = no_upcoming.text
+
+    time.sleep(5)
+    if(check_upcoming.startswith('No upcoming events')):
+      
+        print('No upcoming events')
+        
+    else:
+        events = driver.find_element_by_id("listing-events")
+        titles = [x for x in events.find_elements_by_tag_name("h2")]
+
+        for element in titles:
+            check_id.add(element.get_attribute('id'))
+
+        for event in titles:
+            url_set.add(event.find_element_by_tag_name("a").get_attribute('href'))
+
+    print(url_set)
+    print(len(url_set))
 
 
 
 # Random sleep function created to avoid hardcoded sleep being detected. Had issues with using hardcoded sleeps and being kicked out of the website. 
 def random_sleep():
-    sleeping = round(random.randint(4,100) /7, 4)
+    sleeping = round(random.randint(4,50) /3, 4)
     print('Random sleep should be', sleeping)
     return sleeping
 
@@ -45,6 +73,8 @@ def random_mouse_hover(drive):
     ActionChains(drive).move_by_offset(random.uniform(1, 20), random.uniform(1, 20)).perform()
     time.sleep(random_sleep())
 
+
+get_date_range_url()
 '''
 Login function, on landing page, needed for scroll function to continue on Events pages. Login popup after 5 scrolls while collecting events, so Login at start. 
 MAY Not need this if we can adjust DATE ranges for Events effectivly. Larger countries like USA may have to use this function so Im keeping it here for now.  
@@ -202,69 +232,93 @@ MAY Not need this if we can adjust DATE ranges for Events effectivly. Larger cou
 
 
 # Scroll function to scroll event pages
-def scroll_page():
+
+
+
+# def scroll_page(url):
+
+#     print('<------------------------------------->')
+#     print("New Week" , url)
+#     print('<------------------------------------->')
+#     # start = time.time()
+#     time.sleep(random_sleep())
+#     # end = time.time()
 
     
-    print("In the Scroll function")
+#     print("In the Scroll function")
 
-    driver.get(France)
-    driver.maximize_window()
-    random_mouse_hover(driver)
+#     driver.get(url)
+#     driver.maximize_window()
+#     random_mouse_hover(driver)
 
-    start = time.time()
-    time.sleep(random_sleep())
-    end = time.time()
-    print(f"Scroll took {(end - start):.5f} seconds")
+#     # start = time.time()
+#     time.sleep(random_sleep())
+#     # end = time.time()
+#     # print(f"Scroll took {(end - start):.5f} seconds")
 
-    #  Get scroll height
-    last_height = driver.execute_script("return document.body.scrollHeight")
+#     #  Get scroll height
+#     last_height = driver.execute_script("return document.body.scrollHeight")
 
 
-    random_mouse_hover(driver)
+#     random_mouse_hover(driver)
 
-    while True:
-        print("in while loop")
+#     while True:
+#         print("in while loop")
 
-        # Scroll down to bottom
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+#         # Scroll down to bottom
+#         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-        start = time.time()
-        time.sleep(random_sleep())
-        end = time.time()
-        print(f"sleep for scroll took {(end - start):.5f} seconds")
+#         # start = time.time()
+#         time.sleep(random_sleep())
+#         # end = time.time()
+#         # print(f"sleep for scroll took {(end - start):.5f} seconds")
 
-         # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            break
-        last_height = new_height
-        print("headed to events function")
-        get_event_urls_by_country()
+#          # Calculate new scroll height and compare with last scroll height
+#         new_height = driver.execute_script("return document.body.scrollHeight")
+#         if new_height == last_height:
+#             break
+#         last_height = new_height
+#         print("headed to events function")
+#         random_mouse_hover(driver)
+#         get_event_urls_by_country()
 
-        random_mouse_hover(driver)
+        # random_mouse_hover(driver)
     
-    driver.delete_all_cookies()
-    driver.close()
-    driver.quit()
+    # driver.delete_all_cookies()
+    # driver.close()
+    # driver.quit()
    
 """
 Grabs event URLs AND event IDs. Added to a set to avoid duplicates with each scroll. 
 """
-def get_event_urls_by_country():
-    print('In events function')
-    url_set = set() 
-    check_id = set()
-    events = driver.find_element_by_id("listing-events")
-    titles = [x for x in events.find_elements_by_tag_name("h2")]
 
-    for element in titles:
-        check_id.add(element.get_attribute('id'))
 
-    for event in titles:
-        url_set.add(event.find_element_by_tag_name("a").get_attribute('href'))
+# def get_event_urls_by_country():
+#     # print('In events function')
+#     url_set = set() 
+#     check_id = set()
+#     events = driver.find_element_by_id("listing-events")
+#     titles = [x for x in events.find_elements_by_tag_name("h2")]
 
-    print(url_set)
-    print(check_id)
+#     for element in titles:
+#         check_id.add(element.get_attribute('id'))
+
+#     for event in titles:
+#         url_set.add(event.find_element_by_tag_name("a").get_attribute('href'))
+
+#     with open('event_url.txt', 'w') as file:
+# #       
+#             for url in url_set:
+#                 print(url_set)
+#                 print(check_id)
+#                 file.write(url)
+#                 file.write('\n')
+
+#     random_mouse_hover(driver)
+#     time.sleep(random_sleep())
+#     # print(url_set)
+#     # print(check_id)
+
 
 
 
@@ -273,7 +327,11 @@ def get_event_urls_by_country():
 
     
 # countries_grab(login())
-scroll_page()
+# scroll_page()
+
+
+
+
 
 
 
