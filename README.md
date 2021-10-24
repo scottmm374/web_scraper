@@ -1,16 +1,83 @@
-# Tentimes-scraper
+# Tentimes-scraper :spider:
 
-### Table of Contents
+## Table of Contents
 
-- [Data to Collect](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#data-to-collect) :dart:
-- [Todo]() :pushpin:
+- [Data to Collect](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#data-to-collect)
+- [Todo]()
 
-- [Website Information]() :information_source:
-  - [Robots.txt](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#robotstxt) :robot:
-- [Issues/bugs-Code](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#issuesbugs) :bug:
-- [Console Errors]() :warning:
+- [Website Information]()
+  - [Robots.txt](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#robotstxt)
+- [Issues/bugs-Code](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#issuesbugs)
+- [Console Errors]()
 
 ---
+
+## Data to collect :dart:
+
+- [x] List of all Country URL's
+- [x] All Event URL's for EACH Country
+- [x] Event Details page collect:
+
+  - [x] Event Name
+  - [x] Format Type
+  - [x] Start Date
+  - [x] End Date
+  - [x] Location
+  - [x] Event Venue
+  - [x] Event Address
+  - [x] Description
+  - [x] Timings
+  - [x] Entry Fees
+  - [x] Estimated Turnout
+  - [x] Catagory
+  - [x] Type (Same as Format I believe)
+  - [ ] Offical Links
+  - [x] Frequency
+  - [x] Organizer
+  - [x] Editions
+  - [ ] Different Located Editions
+
+---
+
+## TODO :pushpin:
+
+- [x] Login function
+- [x] Scroll Function
+- [x] Write Country URL to text file
+- [x] Write Event URL to text file
+- [x] Read from countries.txt file and add date ranges (one year prev, monthy increment) to urls
+- [x] Read from countries.txt file and add date ranges (one week, increment) to urls. Changed to one week because Months were too big in some instances, and maxed out at 200 without login.
+- [x] Create CSV file of event details/per country \*\* Note, data is there and writing, but I need to clean up the structure a bit
+- [ ] Read from event_data_range.txt and automate in scraper to visit each url.
+- [ ] create function, tie together with scroll to grab all events in date range per country
+- [ ] Clean up data structure for event details being added to csv
+
+---
+
+## Issues/Bugs :bug::exclamation:
+
+:bug: Country URL def Not bringing in smaller countries, because source is dropdown that may not include them.
+
+:bulb: Possible Solution
+
+- [ ] FIX Grab Countries from table instead when View all clicked for countries
+
+---
+
+:bug: get_event_urls_by_country() Only bringing in max 400 URLS from France/UK
+
+:bulb: Possible Solution
+
+- [ ] use date range on events page to move through events.
+
+:white_check_mark: Solved
+date_picker.py created function to generate date ranges for urls.
+
+---
+
+## Website Information ℹ️
+
+- If not logged in, Country specific event pages only allow 200 max events to be viewed. 10-23-2021 Behavior changed on scroll, now allowing 141 events before login in to continue scroll?
 
 ### Robots.txt :robot:
 
@@ -37,76 +104,6 @@ Disallow: /gold-premium$
 ```
 
 ---
-
-### Data to collect :dart:
-
-- [x] Country event page URL
-- [x] Specific event page URL
-
-##### On each event page
-
-- [x] Event Name
-- [x] Format Type
-- [x] Start Date
-- [x] End Date
-- [x] Location
-- [x] Event Venue
-- [x] Event Address
-- [x] Description
-- [x] Timings
-- [x] Entry Fees
-- [x] Estimated Turnout
-- [x] Catagory
-- [x] Type (Same as Format I believe)
-- [ ] Offical Links
-- [x] Frequency
-- [x] Organizer
-- [x] Editions
-- [ ] Different Located Editions
-
----
-
-##TODO :pushpin:
-
-- [x] Login function
-- [x] Scroll Function
-- [x] Write Country URL to text file
-- [x] Write event URL to text file
-- [x] Read from countries.txt file and add date ranges (one year prev, monthy increment) to urls
-- [x] Read from countries.txt file and add date ranges (one week, increment) to urls. Changed to one week because Months were too big in some instances, and maxed out at 200 without login.
-- [x] Create CSV file of event details/per country \*\* Note, data is there and writing, but I need to clean up the structure a bit
-- [ ] Read from event_data_range.txt and automate in scraper to visit each url.
-- [ ] create function, tie together with scroll to grab all events in date range per country
-- [ ] Clean up data structure for event details being added to csv
-
----
-
-#Issues/Bugs :bug::exclamation:
-
-:bug: Country URL def Not bringing in smaller countries, because source is dropdown that may not include them.
-
-:bulb: Possible Solution
-
-- [ ] FIX Grab Countries from table instead when View all clicked for countries
-
----
-
-:bug: get_event_urls_by_country() Only bringing in max 400 URLS from France/UK
-
-:bulb: Possible Solution
-
-- [ ] use date range on events page to move through events.
-
-:white_check_mark: Solved
-date_picker.py created function to generate date ranges for urls.
-
----
-
----
-
-## Website Information ℹ️
-
-- If not logged in, Country specific event pages only allow 200 max events to be viewed. 10-23-2021 Behavior changed on scroll, now allowing 141 events before login in to continue scroll?
 
 ---
 
