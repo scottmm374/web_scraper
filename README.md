@@ -2,13 +2,13 @@
 
 ## Table of Contents
 
-- [Data to Collect](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#data-to-collect)
-- [Todo]()
+- [Data to Collect](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#data-to-collect-dart)
+- [Todo](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#todo-pushpin)
 
-- [Website Information]()
-  - [Robots.txt](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#robotstxt)
-- [Issues/bugs-Code](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#issuesbugs)
-- [Console Errors]()
+- [Website Information](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#website-information-%E2%84%B9%EF%B8%8F)
+  - [Robots.txt](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#robotstxt-robot)
+- [Issues/bugs-Code](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#issuesbugs-bugexclamation)
+- [Console Errors](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#errors-in-console-warning)
 
 ---
 
