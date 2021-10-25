@@ -52,15 +52,16 @@ with open('event_url.txt') as f:
     # print(" with open before for loop")
     line = f.readline()
     while line:
+        print("grabbing", line)
         line = f.readline().strip().replace('\n', '')
         # url_list.append(line.strip().replace('\n', ''))
 # print(url_list)      
 
 
-        print(line) 
+        print("feeding", line) 
         response = requests.get(line, allow_redirects=False)
         soup = BeautifulSoup(response.content, "html.parser")
-        print(soup.prettify())
+        # print(soup.prettify())
         
         # FORMAT, EVENT NAME, DATES, LOCATION (pulled from Header)
         top_wrapper = soup.find('section', attrs={'class' : 'page-wrapper'})
@@ -88,7 +89,7 @@ with open('event_url.txt') as f:
         table_details = soup.find('table', attrs={'class': 'table noBorder mng w-100 trBorder'})
         # Table section that contains ENTRY FEES, TIMINGS
         table_row = table_details.find('tr', attrs={'id': 'hvrout1'})
-
+    #  TODO can cause error, occasionally not found
         # Entry Fees
         # search_row = table_row.findAll('h2')
         # for x in search_row:
@@ -104,6 +105,7 @@ with open('event_url.txt') as f:
             time_list.pop()
         event_single['Timings'] = time_list[1:]
 
+        #  TODO can cause error, occasionally not found
         # Estimated Turnout
         # turnout = table_row.next_sibling
 
@@ -116,6 +118,7 @@ with open('event_url.txt') as f:
         # exhibitors = (f'{my_list[1]} Exhibitors')
 
         # event_single['Estimated_turnout'] = [visitors, exhibitors]
+
 
         # CATAGORIES 
         table_data_cell = table_details.find('td', attrs={'id': 'hvrout2'})
@@ -162,17 +165,22 @@ with open('event_url.txt') as f:
         for key, value in event_single.items():
                 fieldnames.append(key)
 
+    # initial write to csv 
+        # with open('events.csv', 'w') as csvfile:
+        #     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        #     writer.writeheader()
+        #     writer.writerow(event_single)
+
+        #  Appending
+
         with open('events.csv', 'a') as csvfile:
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writerow(event_single)
 
         
         
-    # initial write to csv 
-        # with open('events.csv', 'w') as csvfile:
-        #     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        #     writer.writeheader()
-        #     writer.writerow(event_single)
+    
+        
             
        
 
