@@ -77,7 +77,11 @@ date_picker.py created function to generate date ranges for urls.
 
 ## Website Information ℹ️
 
-- If not logged in, Country specific event pages only allow 200 max events to be viewed. 10-23-2021 Behavior changed on scroll, now allowing 141 events before login in to continue scroll?
+- Previous events only go back one year based off the current Today's date. Upcoming Events listed up to 5 years based off current Today's date.
+- If not logged in, Country specific event pages only allow 200 max events to be viewed, and only 400 max for date ranges.
+- https://10times.com/events/by-country Events number per country is the Total Events, previous and upcoming per country.
+- https://10times.com/{country} Each Country events page, left column, listed countries (These numbers represent Upcoming events)
+- Country specific event page listings changed to allow 140 events before Login required(Note: lazy scroll seems to be gone?). Used to allow 40 per scroll, up to 200 events before loggin in.
 
 ### Robots.txt :robot:
 

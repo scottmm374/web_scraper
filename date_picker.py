@@ -1,17 +1,19 @@
 
-from datetime import date, datetime, timedelta
+from datetime import date,timedelta
 
 
 # TODO Name these better
 url_list = []
 url_ranges = []
-another_list=[]
+start_end_pair_list=[]
 url_dates = []
 
 
-# TODO automate start and end dates
-start_dt = date(2020, 10, 26)
-end_dt = date(2021, 10, 26)
+# TODO automate start and end dates, based on current_date
+
+
+start_dt = date(2020, 11, 5)
+end_dt = date(2021, 11, 4)
 
 def create_url():
 
@@ -21,19 +23,17 @@ def create_url():
             yield start_date + timedelta(n + 6)
     for dt in dateRangeStart(start_dt, end_dt):
         url_dates.append(dt.strftime("%Y-%m-%d"))
-        print(dt)
     
     # Grouping into start and end dates for 1 week range. 
     step = 2     
     for x in range(0, len(url_dates)-step+1, step):
-        another_list.append(url_dates[x:x+step])
-
-    global size
-    size = (len(another_list))
+        start_end_pair_list.append(url_dates[x:x+step])
 
     
+
+    # Creating the url's with start and end dates added
     for url in url_list:
-        for dates in another_list:
+        for dates in start_end_pair_list:
             url_ranges.append(f'{url}?datefrom={dates[0]}&dateto={dates[1]}')
             
      
@@ -47,9 +47,10 @@ with open('countries.txt') as countries:
     create_url()
     
 
-# writing new Urls to text file with one year previous to todays date incremented Weekly
+# writing new Urls to txt file 
 with open('event_date_range.txt', 'w') as file:
         for url in url_ranges:
+            # Had this in here to avoid pulling url's that do not contain valid url, happened once but I believe I fixed it, so may not need this check. 
             if not url.startswith('?'): 
                     file.write(url)
                     file.write('\n')

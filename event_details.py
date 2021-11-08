@@ -35,7 +35,7 @@ def get_details(url):
    
     URL = url
     event_single = {
-        'Event_url': '',
+        'Event_url': None,
         'Event_name': None,
         'Event_venue_name': None,
         'Venue_address' : None,
@@ -52,7 +52,8 @@ def get_details(url):
     }
    
     '''
-    In try catch to avoid stopping the scraper because of a missed element
+    In try catch to avoid stopping the scraper because of a missed element.
+    A few Elements need conditionals, I will list on the Readme.
     '''
 
 # Check if url valid
@@ -93,7 +94,7 @@ def get_details(url):
         print('Couldnt find event name')
 
     # Event DATES
-    # TODO: remove extra data at end
+   
     try:
         dates = location_finder[0].get_text().replace('Add To Calendar', '')
         event_single['Dates'] = [dates]
@@ -157,6 +158,7 @@ def get_details(url):
         print('Couldnt find Timings')
 
     # ESTIMATED TURNOUT
+    # TODO: This can have at least 3 different fields, visitor, exhibitor, delegates that I have found so far. Need to adjust this one for each senario
     try:
         turnout = table_row.next_sibling
         my_list = []
@@ -192,7 +194,7 @@ def get_details(url):
     except:    
         print('Couldnt find venue_list')
 
-# VENUE ADDRESS
+# VENUE ADDRESS - FIXME: Wont be located for virtual events, so need conditional
     try:
         venue_address = map_location.find('p')
         addy = []
