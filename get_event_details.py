@@ -61,14 +61,13 @@ def get_details(url):
     try:
         response = requests.get(URL, allow_redirects=False)
         response.raise_for_status()
-    except URLError as ue:
+    except URLError:
             print("The Server Could Not be Found")
 
 #    Adding event URL to event_single to track url data retrieved from
     event_single['Event_url'] = URL
     soup = BeautifulSoup(response.content, "html.parser")
-    # print(soup.prettify())
-    # print(soup.get_text())
+   
 
     # FORMAT, EVENT NAME, DATES, LOCATION (pulled from Header)
 
@@ -100,7 +99,8 @@ def get_details(url):
     # Event DATES
    
     try:
-        dates = location_finder[0].get_text().split('\\', 1)[0].replace('Add To Calendar', '').replace('New Date Reminder', "")
+        get_event_dates = location_finder[0]
+        dates = get_event_dates.get_text().split('\\', 1)[0].replace('Add To Calendar', '').replace('New Date Reminder', "")
         event_single['Dates'] = dates
     except:
         print('Couldnt find Dates')
@@ -118,8 +118,8 @@ def get_details(url):
     except:
         print('Couldnt find description_section')
     try:
-        description = description_section.p.get_text()
-        event_single['Description']= [description.strip()]
+        description = description_section.p.get_text(strip=True)
+        event_single['Description']= description
     except:
         print('Couldnt find Description')
    
@@ -131,33 +131,35 @@ def get_details(url):
     except:
         print('Couldnt find table_details')
 
-    # Table section that contains ENTRY FEES, TIMINGS
-    # try:
-    #     table_row = table_details.find('tr', attrs={'id': 'hvrout1'})
-    # except:
-    #     print('Couldnt find table_row')
-
 # Timings
-# TODO:  some entry_fees have a link to check website, which is behind login, others have a table(or two)linked at the bottom of the page. Needs a few different conditionals to work properly 
+# Some entry_fees have a link to check website, which is behind login, others have a table(or two)linked at the bottom of the page (View Details).
     try:
-        timings = table_details[0].next
-        event_single["Timings"] = timings.get_text(',', strip=True).replace("Timings", "").replace("(expected)", "").replace(",Not Verified", "").replace("(General)", "")
+        get_timings = table_details[0].next
+        clean_timings = get_timings.get_text().replace("Timings", "").replace("(expected)", "").replace("Not Verified", "").replace("(General)", "").replace('\n', " ")
+        timings = " ".join(re.split("\s+", clean_timings, flags=re.UNICODE))
+        event_single["Timings"] = timings
     except:
         print('Couldnt find Timings')
 
      # Entry_fees
     try:
-      entry_fees = timings.next_sibling
-      event_single["Entry_fees"] = entry_fees.get_text(',', strip=True).replace("Entry Fees,", "").replace("\n", "")
+        get_entry_fees = get_timings.next_sibling.get_text().replace("Entry Fees", " ").replace('\n', " ").replace('View Details', ' (View Details)')
+    
+        entry_fees = " ".join(re.split("\s+", get_entry_fees, flags=re.UNICODE))
+      
+
+        event_single["Entry_fees"] = entry_fees
        
     except:
-        print('Couldnt find Timings')
+        print('Couldnt find Entry Fees')
 
     # ESTIMATED TURNOUT
-    # TODO: This can have at least 3 different fields, visitor, exhibitor, delegates that I have found so far. Need to adjust this one for each senario
+    # This can have at least 3 different fields, visitor, exhibitor, delegates that I have found so far. 
     try:
-        estimated_turnout = table_details[1].next
-        event_single["Estimated_turnout"] = estimated_turnout.get_text().replace("Estimated Turnout", "").replace("Estimated Count", "").replace("Based on previous editions", "")
+        get_estimated_turnout = table_details[1].next
+        clean_estimated_turnout = get_estimated_turnout.get_text().replace("Estimated Turnout", " ").replace("Estimated Count", " ").replace("Based on previous editions", " ").replace('upto', 'up to').replace('\n', " ")
+        estimated_turnout = " ".join(re.split("\s+", clean_estimated_turnout, flags=re.UNICODE))
+        event_single["Estimated_turnout"] = estimated_turnout
       
 
         
@@ -167,44 +169,48 @@ def get_details(url):
 # CATEGORIES 
     try:
         
-       categories = estimated_turnout.next_sibling
-       event_single["Categories"] = categories.get_text().replace("Category & Type", "").replace("Conference", "").replace("Trade Show", "")
+       get_categories = get_estimated_turnout.next_sibling
+       clean_categories = get_categories.get_text().replace("Category & Type", "").replace("Conference", "").replace("Trade Show", "")
+       categories = " ".join(re.split("\s+", clean_categories, flags=re.UNICODE))
+
+       event_single["Categories"] = categories
     except:
         print('Couldnt find table_row')
 
 
 # VENUE NAME
     try:
-   
-        venue_list = []
-        map_location = soup.find('section', attrs={'id': 'map_dirr'})
-        for venue in map_location.findAll('a'):
-            venue_list.append(venue.get_text())
-        event_single['Event_venue_name'] = venue_list[1].strip().replace('\n', '')
-    except:    
+        # Grab event name from alt text in map image, anchor tags are inconsistant to target. 
+       
+        get_map_location = soup.find(id='map_dirr').find('img', alt=True)
+        venue_name = get_map_location['alt'].replace("map of ", '')
+        event_single['Event_venue_name'] = venue_name
+       
+    except: 
+        # If not found, its a virtual event.
+        event_single['Event_venue_name'] = "Virtual"   
         print('Couldnt find venue_list')
 
-# VENUE ADDRESS - FIXME: Wont be located for virtual events, so need conditional
+# VENUE ADDRESS 
     try:
-        venue_address = map_location.find('p')
-        addy = []
-        for address in venue_address.find_all('span'):
-            addy.append(address.get_text())
-        event_single['Venue_address'] = addy
+         get_venue_address = soup.find(id="map_dirr").get_text(strip=True)
+         venue_address = get_venue_address.replace('Venue Map & Directions', "").replace("Get Directions", "")
+         event_single['Venue_address'] = venue_address
+         
     except:
+        # If not found, its a virtual event.
+        event_single['Venue_address'] = 'Virtual'
         print("Venue addy not found")
 
 # EDITIONS AND FREQUENCY
     try:
         editions_frequency = table_details[2].next
-        # table_section_3 = soup.find('tr', attrs={'id': 'hvrout3'})
         edition_freq = []
         for element in editions_frequency.stripped_strings:
                 edition_freq.append(element.replace('Interested', ''))
         index_marker = edition_freq.index("Frequency")
         event_single['Editions'] = edition_freq[1:index_marker]
         event_single['Frequency'] = edition_freq[index_marker + 1]
-        print(edition_freq)
     except:
         print("Editions or Frequency not found")
 
