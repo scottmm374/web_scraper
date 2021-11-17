@@ -14,28 +14,48 @@
 
 ## Data to collect :dart:
 
+#### NOTES:
+
+##### Entry Fees
+
+- If "View Details" link is present, links to a table at bottom of event page with different Entry fees based off general, public, exhibitor, ages, booth, etc and can be quite extensive.
+- If "Check Offical Website" is present, info is blocked behind a login linked to external website.
+
+##### Event Venue Address and Name
+
+- Do not access through anchor tag (Inconsistent), target map ID.
+- If Map ID isnt present the event is Virtual, and no venue name or address will be provided.
+
+##### Official Link
+
+- We decided to leave this out, all links are to external websites.
+
+##### Editions
+
+- Additional Editions previous years (if applicable) located in a popup modal when clicking on link text e.g. "+ 6 more editions"
+
+---
+
 - [x] List of all Country URL's
 - [x] All Event URL's for EACH Country
-- [x] Event Details page collect:
+- [x] Event Details page
 
   - [x] Event Name
   - [x] Format Type
   - [x] Start Date
   - [x] End Date
   - [x] Location
-  - [x] Event Venue
-  - [x] Event Address
+  - [x] Event Venue Name
+  - [x] Event Venue Address
   - [x] Description
   - [x] Timings
   - [x] Entry Fees
   - [x] Estimated Turnout
-  - [x] Catagory
-  - [x] Type (Same as Format I believe)
-  - [ ] Offical Links
+  - [x] Catagories
   - [x] Frequency
   - [x] Organizer
   - [x] Editions
-  - [ ] Different Located Editions
+  - [ ] Offical Links
 
 ---
 
@@ -48,40 +68,23 @@
 - [x] Read from countries.txt file and add date ranges (one year prev, monthy increment) to urls
 - [x] Read from countries.txt file and add date ranges (one week, increment) to urls. Changed to one week because Months were too big in some instances, and maxed out at 200 without login.
 - [x] Create CSV file of event details/per country \*\* Note, data is there and writing, but I need to clean up the structure a bit
-- [ ] Read from event_data_range.txt and automate in scraper to visit each url.
-- [ ] create function, tie together with scroll to grab all events in date range per country
-- [ ] Clean up data structure for event details being added to csv
+- [x] Read from event_data_range.txt and automate in scraper to visit each url.
+- [x] create function, tie together with scroll to grab all events in date range per country
+- [x] Clean up data structure for event details being added to csv
 
 ---
 
-## Issues/Bugs :bug::exclamation:
+## Website Behavior ℹ️
 
-:bug: Country URL def Not bringing in smaller countries, because source is dropdown that may not include them.
+_Information to help with different behaviors observed while scraping the website._
 
-:bulb: Possible Solution
-
-- [ ] FIX Grab Countries from table instead when View all clicked for countries
-
----
-
-:bug: get_event_urls_by_country() Only bringing in max 400 URLS from France/UK
-
-:bulb: Possible Solution
-
-- [ ] use date range on events page to move through events.
-
-:white_check_mark: Solved
-date_picker.py created function to generate date ranges for urls.
-
----
-
-## Website Information ℹ️
-
-- Previous events only go back one year based off the current Today's date. Upcoming Events listed up to 5 years based off current Today's date.
+- Previous events **Only goes back one year** based off Today's date.
+- Upcoming Events listed up to 5 years based off Today's date.
 - If not logged in, Country specific event pages only allow 200 max events to be viewed, and only 400 max for date ranges.
 - https://10times.com/events/by-country Events number per country is the Total Events, previous and upcoming per country.
 - https://10times.com/{country} Each Country events page, left column, listed countries (These numbers represent Upcoming events)
-- Country specific event page listings changed to allow 140 events before Login required(Note: lazy scroll seems to be gone?). Used to allow 40 per scroll, up to 200 events before loggin in.
+- Country specific event page listings changed to allow 140 events before Login required (Note: lazy scroll seems to be gone?). Used to allow 40 per scroll, up to 200 events before loggin in.
+- Data collecting can differ from page to page, as far as what to target to collect data.
 
 ### Robots.txt :robot:
 
@@ -108,6 +111,27 @@ Disallow: /gold-premium$
 ```
 
 ---
+
+---
+
+## Issues/Bugs :bug::exclamation:
+
+:bug: Country URL def Not bringing in smaller countries, because source is dropdown that may not include them.
+
+:bulb: Possible Solution
+
+- [x] FIX Grab Countries from table instead when View all clicked for countries
+
+---
+
+:bug: get_event_urls_by_country() Only bringing in max 400 URLS from France/UK
+
+:bulb: Possible Solution
+
+- [x] use date range on events page to move through events.
+
+:white_check_mark: Solved
+date_picker.py created function to generate date ranges for urls.
 
 ---
 

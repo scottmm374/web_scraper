@@ -36,6 +36,8 @@ def get_details(url):
    
     URL = url
     event_single = {
+        'Country': None,
+        "Date_range": None,
         'Event_url': None,
         'Event_name': None,
         'Event_venue_name': None,
@@ -64,23 +66,37 @@ def get_details(url):
     except URLError:
             print("The Server Could Not be Found")
 
-#    Adding event URL to event_single to track url data retrieved from
+#    Adding event URL to track where data retrieved from
     event_single['Event_url'] = URL
     soup = BeautifulSoup(response.content, "html.parser")
-   
+    
+
+    try:
+        get_country = soup.find("h1")
+        country = get_country.get_text().replace('Events in ', '').strip()
+        event_single["Country"] = country
+    except:
+        print("Didnt find country")
+
+    try:
+        get_date_range = get_country.next_siblings
+        date_range = get_date_range[1].get_text()
+        event_single["Date_range"] = date_range
+    except:
+        print("Didnt find date_range")
 
     # FORMAT, EVENT NAME, DATES, LOCATION (pulled from Header)
 
     try: 
         top_wrapper = soup.find('section', attrs={'class' : 'page-wrapper'})
-        
     except:
         print('Couldnt find top-wrapper')
+
     try:
         location_finder = top_wrapper.findAll('div', attrs={'class': 'mb-0 fs-20'})
-        
     except:
         print('Couldnt find location_finder')
+
 
     # FORMAT TYPE
     try: 
@@ -97,7 +113,6 @@ def get_details(url):
         print('Couldnt find event name')
 
     # Event DATES
-   
     try:
         get_event_dates = location_finder[0]
         dates = get_event_dates.get_text().split('\\', 1)[0].replace('Add To Calendar', '').replace('New Date Reminder', "")
@@ -112,7 +127,7 @@ def get_details(url):
     except:
         print('Couldnt find title')
    
-    # DESCRIPTION (paragraph)
+    # DESCRIPTION
     try:
         description_section = soup.find('div', attrs={'id': 'content'})
     except:
@@ -125,14 +140,17 @@ def get_details(url):
    
 
 
-    # TABLE THAT CONTAINS ENTRY FEES, TIMINGS, ESTIMATED TURNOUT, CATEGORIES, VENUE NAME, EDITIONS, ORGANIZER
+# TABLE THAT CONTAINS ENTRY FEES, TIMINGS, ESTIMATED TURNOUT, CATEGORIES, VENUE NAME, EDITIONS, ORGANIZER
     try:
         table_details = soup.find('table', attrs={'class': 'table noBorder mng w-100 trBorder'}).find_all('tr')
     except:
         print('Couldnt find table_details')
 
+
+   
+    # Some entry_fees have a link to check website, which is behind login, others have a table(or two)linked at the bottom of the page (View Details).
+    
 # Timings
-# Some entry_fees have a link to check website, which is behind login, others have a table(or two)linked at the bottom of the page (View Details).
     try:
         get_timings = table_details[0].next
         clean_timings = get_timings.get_text().replace("Timings", "").replace("(expected)", "").replace("Not Verified", "").replace("(General)", "").replace('\n', " ")
@@ -227,7 +245,7 @@ grab_url()
 
 def create_csv(data):
     print("data", data)
-    fieldnames = ["Event_url","Event_name", "Event_venue_name", "Venue_address", 'Format', 'Dates', 'Location', "Entry_fees", 'Estimated_turnout', 'Categories', 'Frequency', 'Organizer', 'Editions', 'Timings', 'Description']
+    fieldnames = ["Country", "Date_range", "Event_url","Event_name", "Event_venue_name", "Venue_address", 'Format', 'Dates', 'Location', "Entry_fees", 'Estimated_turnout', 'Categories', 'Frequency', 'Organizer', 'Editions', 'Timings', 'Description']
     print("In writing to csv")
 
     # write to csv 
