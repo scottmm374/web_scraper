@@ -56,7 +56,7 @@ def get_details(url):
    
     '''
     In try catch to avoid stopping the scraper because of a missed element.
-    A few Elements need conditionals, I will list on the Readme.
+    
     '''
 
 # Check if url valid
@@ -71,19 +71,8 @@ def get_details(url):
     soup = BeautifulSoup(response.content, "html.parser")
     
 
-    try:
-        get_country = soup.find("h1")
-        country = get_country.get_text().replace('Events in ', '').strip()
-        event_single["Country"] = country
-    except:
-        print("Didnt find country")
 
-    try:
-        get_date_range = get_country.next_siblings
-        date_range = get_date_range[1].get_text()
-        event_single["Date_range"] = date_range
-    except:
-        print("Didnt find date_range")
+    
 
     # FORMAT, EVENT NAME, DATES, LOCATION (pulled from Header)
 

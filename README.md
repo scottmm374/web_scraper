@@ -71,6 +71,11 @@
 - [x] Read from event_data_range.txt and automate in scraper to visit each url.
 - [x] create function, tie together with scroll to grab all events in date range per country
 - [x] Clean up data structure for event details being added to csv
+- [ ] Seperate data pulled by country.
+
+- [ ] Refactor into classes
+- [ ] Pull country and date range from date_range_urls to add to CSV of data collected on events.
+- [ ] Adjust reading from text file with date_range_urls
 
 ---
 
@@ -78,13 +83,16 @@
 
 _Information to help with different behaviors observed while scraping the website._
 
+We chose to use Date ranges to avoid a lot of the behaviors that made scraping this site difficult. Date ranges will have to adjust depending on the size and activity of the country. Most countries seem to work well with a one week date range. Larger countries most likely will need a much smaller range. USA I imagine may need a 1 -3 day range max during busiest times.
+
 - Previous events **Only goes back one year** based off Today's date.
 - Upcoming Events listed up to 5 years based off Today's date.
+- If a Search in a specific date range for events does not have any upcoming events, the website will fill with previous random events. I added a search for the element (text) that if present, that page will be skipped, and move onto the next one, otherwise the data is no good. I originally targetd ID=12, but occasionally a page does not have this present, so it was inconsistent, and skipping pages with legitimate events.
 - If not logged in, Country specific event pages only allow 200 max events to be viewed, and only 400 max for date ranges.
+  - Scrolling behaviors as well as Max events shown has changed slightly, instead of 40 events views per scroll, there seems to be about 140 or so before login is prompted.
 - https://10times.com/events/by-country Events number per country is the Total Events, previous and upcoming per country.
 - https://10times.com/{country} Each Country events page, left column, listed countries (These numbers represent Upcoming events)
-- Country specific event page listings changed to allow 140 events before Login required (Note: lazy scroll seems to be gone?). Used to allow 40 per scroll, up to 200 events before loggin in.
-- Data collecting can differ from page to page, as far as what to target to collect data.
+- Data collecting can differ from one event page to another, as far as what to target to collect data. I've had to adjust targeted elements as I run the scrapper, because a handful of events have a slightly different structure to them.
 
 ### Robots.txt :robot:
 

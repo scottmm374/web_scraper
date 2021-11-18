@@ -4,6 +4,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import env
 import random
+import re
 
 
 
@@ -101,16 +102,19 @@ def get_event_urls_by_country():
     time.sleep(random_sleep())
     # driver.get(url)
     # driver.maximize_window()
+    time.sleep(10)
+
 
     # ADDED because if no events during date range, site fills with with random previous events. 
-    no_upcoming = driver.find_element_by_xpath('//*[@id="12"]')
-    check_upcoming = no_upcoming.text
+    # no_upcoming = driver.find_element_by_xpath('//*[@id="12"]') I originally targeted this way, but found some pages do not have this element at all. 
+    # check_upcoming = no_upcoming.text
+    src = driver.page_source
+    text_found = re.search(r'No upcoming events', src)
+    
+    
     time.sleep(5)
-    if(check_upcoming.startswith('No upcoming events')):
-      
-        print('No upcoming events')
-        
-    else:
+    if not text_found:
+   
         events = driver.find_element_by_id("listing-events")
         titles = [x for x in events.find_elements_by_tag_name("h2")]
 
