@@ -1,14 +1,14 @@
-# Tentimes-scraper :spider:
+# Web-scraper :spider:
 
 ## Table of Contents
 
-- [Data to Collect](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#data-to-collect-dart)
-- [Todo](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#todo-pushpin)
+- [Data to Collect](https://github.com/scottmm374/web_scraper#data-to-collect-dart)
+- [Todo](https://github.com/scottmm374/web_scraper#todo-pushpin)
 
-- [Website Information](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#website-information-%E2%84%B9%EF%B8%8F)
-  - [Robots.txt](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#robotstxt-robot)
-- [Issues/bugs-Code](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#issuesbugs-bugexclamation)
-- [Console Errors](https://github.com/accrue-nuclius-scrappers/tentimes-scraper/tree/france-ms#errors-in-console-warning)
+- [Website Information](https://github.com/scottmm374/web_scraper#website-behavior-%E2%84%B9%EF%B8%8F)
+  - [Robots.txt](https://github.com/scottmm374/web_scraper#robotstxt-robot)
+- [Issues/bugs-Code](https://github.com/scottmm374/web_scraper#issuesbugs-bugexclamation)
+- [Console Errors](https://github.com/scottmm374/web_scraper#errors-in-console-warning)
 
 ---
 
@@ -90,8 +90,8 @@ We chose to use Date ranges to avoid a lot of the behaviors that made scraping t
 - If a Search in a specific date range for events does not have any upcoming events, the website will fill with previous random events. I added a search for the element (text) that if present, that page will be skipped, and move onto the next one, otherwise the data is no good. I originally targetd ID=12, but occasionally a page does not have this present, so it was inconsistent, and skipping pages with legitimate events.
 - If not logged in, Country specific event pages only allow 200 max events to be viewed, and only 400 max for date ranges.
   - Scrolling behaviors as well as Max events shown has changed slightly, instead of 40 events views per scroll, there seems to be about 140 or so before login is prompted.
-- https://10times.com/events/by-country Events number per country is the Total Events, previous and upcoming per country.
-- https://10times.com/{country} Each Country events page, left column, listed countries (These numbers represent Upcoming events)
+- https://URL/events/by-country Events number per country is the Total Events, previous and upcoming per country.
+- https://URL/{country} Each Country events page, left column, listed countries (These numbers represent Upcoming events)
 - Data collecting can differ from one event page to another, as far as what to target to collect data. I've had to adjust targeted elements as I run the scrapper, because a handful of events have a slightly different structure to them.
 
 ### Robots.txt :robot:
