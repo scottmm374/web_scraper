@@ -71,9 +71,6 @@ def get_details(url):
     soup = BeautifulSoup(response.content, "html.parser")
     
 
-
-    
-
     # FORMAT, EVENT NAME, DATES, LOCATION (pulled from Header)
 
     try: 
@@ -137,7 +134,10 @@ def get_details(url):
 
 
    
-    # Some entry_fees have a link to check website, which is behind login, others have a table(or two)linked at the bottom of the page (View Details).
+
+# Many entry_fees have an external link instead of available on website, which is behind login.
+# Others have a table(or two)linked at the bottom of the page (View Details). 
+
     
 # Timings
     try:
@@ -161,7 +161,7 @@ def get_details(url):
         print('Couldnt find Entry Fees')
 
     # ESTIMATED TURNOUT
-    # This can have at least 3 different fields, visitor, exhibitor, delegates that I have found so far. 
+    # Estimated turnout has more then one type, visitor, exhibitor, and delegates.  
     try:
         get_estimated_turnout = table_details[1].next
         clean_estimated_turnout = get_estimated_turnout.get_text().replace("Estimated Turnout", " ").replace("Estimated Count", " ").replace("Based on previous editions", " ").replace('upto', 'up to').replace('\n', " ")
@@ -173,7 +173,7 @@ def get_details(url):
     except:
             print('Couldnt find estimated turnout')
 
-# CATEGORIES 
+    # CATEGORIES 
     try:
         
        get_categories = get_estimated_turnout.next_sibling
@@ -185,10 +185,9 @@ def get_details(url):
         print('Couldnt find table_row')
 
 
-# VENUE NAME
+    # VENUE NAME
     try:
-        # Grab event name from alt text in map image, anchor tags are inconsistant to target. 
-       
+        # DO NOT TARGET anchor tags, Inconsistent, Grab event name from alt text in map image.
         get_map_location = soup.find(id='map_dirr').find('img', alt=True)
         venue_name = get_map_location['alt'].replace("map of ", '')
         event_single['Event_venue_name'] = venue_name
@@ -198,7 +197,7 @@ def get_details(url):
         event_single['Event_venue_name'] = "Virtual"   
         print('Couldnt find venue_list')
 
-# VENUE ADDRESS 
+    # VENUE ADDRESS 
     try:
          get_venue_address = soup.find(id="map_dirr").get_text(strip=True)
          venue_address = get_venue_address.replace('Venue Map & Directions', "").replace("Get Directions", "")
@@ -209,19 +208,21 @@ def get_details(url):
         event_single['Venue_address'] = 'Virtual'
         print("Venue addy not found")
 
-# EDITIONS AND FREQUENCY
+    # EDITIONS AND FREQUENCY
     try:
         editions_frequency = table_details[2].next
         edition_freq = []
+
         for element in editions_frequency.stripped_strings:
                 edition_freq.append(element.replace('Interested', ''))
         index_marker = edition_freq.index("Frequency")
+
         event_single['Editions'] = edition_freq[1:index_marker]
         event_single['Frequency'] = edition_freq[index_marker + 1]
     except:
         print("Editions or Frequency not found")
 
-# ORGANIZATION
+    # ORGANIZATION
     try:
         organization = soup.find(id="org-name").text
         event_single['Organizer'] = organization

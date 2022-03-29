@@ -253,7 +253,7 @@ def login(url):
 
 
 def countries_grab():
-    driver.get('https://10times.com')
+    driver.get(env.BASE_URL)
     countries = []
 
     start = time.time()
@@ -302,7 +302,7 @@ def countries_grab():
     with open('countries.txt', 'w') as file:
         try:
             for country in countries:
-                file.write(f'https://10times.com{country}')
+                file.write(f'{env.BASE_URL}{country}')
                 file.write('\n')
         except:
             driver.close()

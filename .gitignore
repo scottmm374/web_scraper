@@ -100,6 +100,8 @@ env.py
 # Next.js build output
 
 .next
+.txt
+.csv
 
 # Nuxt.js build / generate output
 
