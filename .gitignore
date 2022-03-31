@@ -143,3 +143,8 @@ dist
 testing.py
 scraper/
 env.py
+*.pyc
+*~
+*.swp
+*.py[co]
+venv/
