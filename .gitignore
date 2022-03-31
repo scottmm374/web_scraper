@@ -100,7 +100,7 @@ env.py
 # Next.js build output
 
 .next
-.txt
+*.txt
 .csv
 
 # Nuxt.js build / generate output
@@ -142,4 +142,4 @@ dist
 
 testing.py
 scraper/
-env.pyc
+env.py

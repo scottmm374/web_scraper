@@ -2,31 +2,27 @@ from bs4 import BeautifulSoup
 from urllib.error import URLError
 import requests
 import csv
-import random
+from helpers import random_sleep
 import time
 import re
 
 
-def random_sleep():
-    sleeping = round(random.randint(5,125) /7, 6)
-    print('Random sleep should be', sleeping)
-    return sleeping
+# def random_sleep():
+#     sleeping = round(random.randint(5,125) /7, 6)
+#     return sleeping
 
 
 
 collected_data = []
 
 def grab_url():
-    
-    with open('event_url.txt') as f:
+    with open('txt_csv/event_url.txt') as f:
                 line = f.readline()
+
                 while line:
                     line = f.readline().strip().replace('\n', '')
-                    print('<------------------------------->')
-                    print(line)
                     time.sleep(random_sleep())
                     if not line:
-                        print('no line')
                         break
                     get_details(line)
                 
@@ -35,6 +31,7 @@ def grab_url():
 def get_details(url):
    
     URL = url
+
     event_single = {
         'Country': None,
         "Date_range": None,
@@ -153,8 +150,6 @@ def get_details(url):
         get_entry_fees = get_timings.next_sibling.get_text().replace("Entry Fees", " ").replace('\n', " ").replace('View Details', ' (View Details)')
     
         entry_fees = " ".join(re.split("\s+", get_entry_fees, flags=re.UNICODE))
-      
-
         event_single["Entry_fees"] = entry_fees
        
     except:
@@ -167,15 +162,11 @@ def get_details(url):
         clean_estimated_turnout = get_estimated_turnout.get_text().replace("Estimated Turnout", " ").replace("Estimated Count", " ").replace("Based on previous editions", " ").replace('upto', 'up to').replace('\n', " ")
         estimated_turnout = " ".join(re.split("\s+", clean_estimated_turnout, flags=re.UNICODE))
         event_single["Estimated_turnout"] = estimated_turnout
-      
-
-        
     except:
             print('Couldnt find estimated turnout')
 
     # CATEGORIES 
     try:
-        
        get_categories = get_estimated_turnout.next_sibling
        clean_categories = get_categories.get_text().replace("Category & Type", "").replace("Conference", "").replace("Trade Show", "")
        categories = " ".join(re.split("\s+", clean_categories, flags=re.UNICODE))
@@ -191,7 +182,7 @@ def get_details(url):
         get_map_location = soup.find(id='map_dirr').find('img', alt=True)
         venue_name = get_map_location['alt'].replace("map of ", '')
         event_single['Event_venue_name'] = venue_name
-       
+
     except: 
         # If not found, its a virtual event.
         event_single['Event_venue_name'] = "Virtual"   
@@ -210,13 +201,12 @@ def get_details(url):
 
     # EDITIONS AND FREQUENCY
     try:
-        editions_frequency = table_details[2].next
         edition_freq = []
-
+        editions_frequency = table_details[2].next
         for element in editions_frequency.stripped_strings:
                 edition_freq.append(element.replace('Interested', ''))
-        index_marker = edition_freq.index("Frequency")
 
+        index_marker = edition_freq.index("Frequency")
         event_single['Editions'] = edition_freq[1:index_marker]
         event_single['Frequency'] = edition_freq[index_marker + 1]
     except:
@@ -233,13 +223,13 @@ def get_details(url):
 
 grab_url()
 
-def create_csv(data):
-    print("data", data)
-    fieldnames = ["Country", "Date_range", "Event_url","Event_name", "Event_venue_name", "Venue_address", 'Format', 'Dates', 'Location', "Entry_fees", 'Estimated_turnout', 'Categories', 'Frequency', 'Organizer', 'Editions', 'Timings', 'Description']
-    print("In writing to csv")
 
-    # write to csv 
-    with open('events.csv', 'w', newline='') as csvfile:
+
+def create_csv(data):
+
+    fieldnames = ["Country", "Date_range", "Event_url","Event_name", "Event_venue_name", "Venue_address", 'Format', 'Dates', 'Location', "Entry_fees", 'Estimated_turnout', 'Categories', 'Frequency', 'Organizer', 'Editions', 'Timings', 'Description']
+
+    with open('/txt_csv/events.csv', 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames, delimiter="|")
         writer.writerow({x: x for x in fieldnames})
 

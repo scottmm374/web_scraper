@@ -1,10 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
+from helpers import random_mouse_hover
 import time
 import env
 import random
 import re
+from helpers import random_sleep
 
 
 
@@ -14,40 +18,33 @@ chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--ignore-certificate-errors')
 chrome_options.add_argument('--incognito')
-driver = webdriver.Chrome(env.PATH, options=chrome_options)
+s = Service(env.PATH)
+driver = webdriver.Chrome(service=s, options=chrome_options)
 
-# Random sleep function created to avoid hardcoded sleep being detected. Dont make to fast, Been blocked a couple of times rushing the scrap
-def random_sleep():
-    sleeping = round(random.randint(4,125) /7, 6)
-    print('Random sleep should be', sleeping)
-    return sleeping
+# Random sleep function created to avoid hardcoded sleep being detected. 
+
+# def random_sleep():
+#     sleeping = round(random.randint(4,125) /7, 6)
+#     print('Random sleep should be', sleeping)
+#     return sleeping
 
 
-# Random Mouse function to similate the occasional Mouse movements generally expected when a person visits a webpage
-def random_mouse_hover(drive):
-    ActionChains(drive).move_by_offset(random.uniform(1, 15), random.uniform(1, 15)).perform()
-    time.sleep(random_sleep())
+# Random Mouse function to similate the occasional Mouse movements.
+# def random_mouse_hover(drive):
+#     ActionChains(drive).move_by_offset(random.uniform(1, 15), random.uniform(1, 15)).perform()
+#     time.sleep(random_sleep())
 
 
 # Scroll function to scroll event pages, pages with several listings have lazy load(after 40 listings, scroll is used to trigger new load) 
 def scroll_page(url):
 
-    print('<------------------------------------->')
-    print("New Week" , url)
-    print('<------------------------------------->')
     time.sleep(random_sleep())
-
-    print("In the Scroll function")
-
     driver.get(url)
     driver.maximize_window()
     # random_mouse_hover(driver)
 
-    # start = time.time()
     time.sleep(random_sleep())
-    # end = time.time()
-    # print(f"Scroll took {(end - start):.5f} seconds")
-
+  
     #  Get scroll height
     last_height = driver.execute_script("return document.body.scrollHeight")
 
@@ -55,22 +52,16 @@ def scroll_page(url):
     # random_mouse_hover(driver)
 
     while True:
-        print("in while loop")
-
         # Scroll down to bottom
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-        # start = time.time()
         time.sleep(random_sleep())
-        # end = time.time()
-        # print(f"sleep for scroll took {(end - start):.5f} seconds")
+       
 
          # Calculate new scroll height and compare with last scroll height
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
             break
         last_height = new_height
-        print("headed to events function")
         # random_mouse_hover(driver)
         get_event_urls_by_country()
 
@@ -81,12 +72,12 @@ def scroll_page(url):
     # driver.quit()
 
 
-def get_date_range_url():
-    with open('event_date_range.txt') as f:
-        for url in f:
-            if url.find('france') != -1:
+# def get_date_range_url():
+#     with open('txt_csv/event_date_range.txt') as f:
+#         for url in f:
+#             if url.find('france') != -1:
             
-                scroll_page(str(url))
+#                 scroll_page(str(url))
 
 """
 Grabs event URLs AND event IDs. Added to a set to avoid duplicates with each scroll. 
@@ -96,9 +87,7 @@ def get_event_urls_by_country():
     
     url_set = set() 
     check_id = set()
-    # print('<------------------------------------->')
-    # print("New Week" , url)
-    # print('<------------------------------------->')
+   
     time.sleep(random_sleep())
     # driver.get(url)
     # driver.maximize_window()
@@ -106,7 +95,7 @@ def get_event_urls_by_country():
 
 
     # ADDED because if no events during date range, site fills with with random previous events. 
-    # no_upcoming = driver.find_element_by_xpath('//*[@id="12"]') I originally targeted this way, but found some pages do not have this element at all. 
+    # no_upcoming = driver.find_element(By.xpath('//*[@id="12"]') I orig)inally targeted this way, but found some pages do not have this element at all. 
     # check_upcoming = no_upcoming.text
     src = driver.page_source
     text_found = re.search(r'No upcoming events', src)
@@ -115,17 +104,17 @@ def get_event_urls_by_country():
     time.sleep(5)
     if not text_found:
    
-        events = driver.find_element_by_id("listing-events")
-        titles = [x for x in events.find_elements_by_tag_name("h2")]
+        events = driver.find_element(By.id("listing-events"))
+        titles = [x for x in events.find_elements(By.tagName("h2"))]
 
         for element in titles:
             check_id.add(element.get_attribute('id'))
 
         for event in titles:
-            url_set.add(event.find_element_by_tag_name("a").get_attribute('href'))
+            url_set.add(event.find_element(By.tagName("a").get_attribute('href'))
         
         
-        with open('event_url.txt', 'w') as file:
+        with open('txt_csv/event_url.txt', 'w') as file:
             
             for url in url_set:
                 file.write(url)
@@ -134,7 +123,7 @@ def get_event_urls_by_country():
        
     
 
-get_date_range_url()
+# get_date_range_url()
 
 
 # LOGIN AND GRAB COUNTRIES FUNCTIONS BELOW IF NEEDED
@@ -158,8 +147,7 @@ def login(url):
     print(f"first took {(end - start):.5f} seconds")
 
     try:
-        login_link = driver.find_element_by_xpath('//*[@id="loginHide"]')
-        print('found login')
+        login_link = driver.find_element(By.xpath('//*[@id="loginHide"]'))
         driver.execute_script("arguments[0].click();", login_link)
         
     except:
@@ -176,7 +164,7 @@ def login(url):
     
     try:
         
-        login_email = driver.find_element_by_xpath('//*[@id="valEmail"]')
+        login_email = driver.find_element(By.xpath('//*[@id="valEmail"]'))        
         print('found email')
         login_email.send_keys(env.EMAIL)
         
@@ -191,7 +179,7 @@ def login(url):
     print(f"email took {(end - start):.5f} seconds")
 
     try:
-        check_box = driver.find_element_by_xpath('//*[@id="i2"]')
+        check_box = driver.find_element(By.xpath('//*[@id="i2"]'))  
         print('checkbox')
         driver.execute_script("arguments[0].click();", check_box)
     except:
@@ -207,7 +195,7 @@ def login(url):
     
 
     try:
-        next_btn = driver.find_element_by_xpath('//*[@id="send"]')
+        next_btn = driver.find_element(By.xpath('//*[@id="send"]'))    
         print('next')
         driver.execute_script("arguments[0].click();", next_btn)
 
@@ -222,7 +210,7 @@ def login(url):
 
     
     try:
-        enter_pswd = driver.find_element_by_xpath('//*[@id="otp_box"]/input')
+        enter_pswd = driver.find_element(By.xpath('//*[@id="otp_box"]/inp)ut')
         print('found pswd')
         enter_pswd.send_keys(env.PSWD)
     except:
@@ -236,7 +224,7 @@ def login(url):
     random_mouse_hover(driver)
     
     try:
-        pswd_next_btn = driver.find_element_by_xpath("//input[@value='Next']")
+        pswd_next_btn = driver.find_element(By.xpath("//input[@value='Next'])")
         print('found pswd next')
         driver.execute_script("arguments[0].click();", pswd_next_btn)
 
@@ -246,7 +234,6 @@ def login(url):
 
 
     
-
 
 
 # """ Grabbing all countries and storing in list, will use to add endpoints to url to access different country specific events"""
@@ -270,7 +257,7 @@ def countries_grab():
 
 
     try:
-        btn = driver.find_element_by_xpath('//*[@id="country-btn"]')
+        btn = driver.find_element(By.xpath('//*[@id="country-btn"])'))
         print("Country button found")
         driver.execute_script("arguments[0].click();", btn)
         print("Country button clicked")
@@ -279,34 +266,33 @@ def countries_grab():
         print("Country button NOT found")
         driver.quit()
 
-    
-    print(f"country button took {(end - start):.5f} seconds")
-    
 
     try:
-        table = driver.find_element_by_id('content')
-        country_list = [x for x in table.find_elements_by_tag_name('tr')]
-        # print("found table")
-        # print(country_list)
+        table = driver.find_element(By.id('content'))
+        country_list = [x for x in table.find_elements(By.tagName('tr'))]
+       
         
     except:
         print("dropdown NOT found")
         driver.quit()
-    print('SUCCESS')
+
 
     for element in country_list:
         # There are advertisements  mixed in returning none, this is to avoid those links
         if element.get_attribute('data-link') != None:
             countries.append(element.get_attribute("data-link"))
-    print(countries)
-    with open('countries.txt', 'w') as file:
+ 
+ 
+
+    with open('txt_csv/countries.txt', 'w') as file:
         try:
             for country in countries:
                 file.write(f'{env.BASE_URL}{country}')
                 file.write('\n')
         except:
             driver.close()
-            driver.quit()  
+            driver.quit() 
+
     driver.close()
     driver.quit()
 
@@ -317,7 +303,7 @@ def countries_grab():
 
 
     
-# countries_grab()
+countries_grab()
 # scroll_page()
 
 
