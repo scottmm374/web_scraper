@@ -8,7 +8,7 @@
 - [Website Information](https://github.com/scottmm374/web_scraper#website-behavior-%E2%84%B9%EF%B8%8F)
   - [Robots.txt](https://github.com/scottmm374/web_scraper#robotstxt-robot)
 - [Issues/bugs-Code](https://github.com/scottmm374/web_scraper#issuesbugs-bugexclamation)
-- [Console Errors](https://github.com/scottmm374/web_scraper#errors-in-console-warning)
+- [Refactor tasks]()
 
 ---
 
@@ -119,6 +119,8 @@ Disallow: /gold-premium$
 ```
 
 ---
+
+## ReFactor Tasks
 
 ---
 
