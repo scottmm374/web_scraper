@@ -1,15 +1,15 @@
 from bs4 import BeautifulSoup
 from urllib.error import URLError
+import random
 import requests
 import csv
-from helpers import random_sleep
 import time
 import re
 
 
-# def random_sleep():
-#     sleeping = round(random.randint(5,125) /7, 6)
-#     return sleeping
+def random_sleep():
+    sleeping = round(random.randint(5,125) /7, 6)
+    return sleeping
 
 
 
